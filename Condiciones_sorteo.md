@@ -1,4 +1,4 @@
-# Criterios para el soreto
+# Criterios para el sorteo
 ## Condiciones para ser seleccionda para el viaje del imserso
 
 - **1. Edad**
