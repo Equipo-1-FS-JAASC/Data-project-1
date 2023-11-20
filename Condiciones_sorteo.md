@@ -1,5 +1,5 @@
-## Condiciones iniciales
-# Condiciones para ser seleccionda para el viaje del imserso
+# Criterios para el soreto
+## Condiciones para ser seleccionda para el viaje del imserso
 
 - **1. Edad**
 
