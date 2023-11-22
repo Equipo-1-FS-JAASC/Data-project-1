@@ -2,4 +2,3 @@
 
 Primer Data Project EDEM fs Stas, Adriana, Cristian, Juan y Alberto
 
-![Descripción de la imagen]([/images/picture.jpg](https://images.app.goo.gl/DBZzQozoCBsDnJZJ8))
