@@ -5,8 +5,6 @@
 
 A continuación, se describen los criterios que se han tenido en cuenta para la exclusión o inclusión en el IMSERSO en el algoritmo .
 
-<div class="phishy">Texto de color rojo</div>
-
 
 - **1. Edad**
   
