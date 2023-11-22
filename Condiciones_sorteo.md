@@ -5,8 +5,11 @@
 
 A continuación, se describen los criterios que se han tenido en cuenta para la exclusión o inclusión en el IMSERSO en el algoritmo .
 
+<div class="phishy">Texto de color rojo</div>
+
+
 - **1. Edad**
-- 
+  
 Se ha elegido la edad como criterio porque  puede ayudar a dirigir los recursos hacia la población de personas mayores, que es el grupo objetivo de los programas del IMSERSO. Esto permite centrarse en atender las necesidades específicas de este segmento de la población.
 
  Las personas de una misma franja de edad pueden tener intereses similares, lo que facilita la organización de actividades y servicios que se adapten mejor a sus preferencias.
