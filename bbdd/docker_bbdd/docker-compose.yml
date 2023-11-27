@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/mi_script.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   python_b:
     build:
