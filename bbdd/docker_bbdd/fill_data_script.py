@@ -15,6 +15,8 @@ fake = Faker('es_ES')
 # Configuración del generador de números aleatorios
 random.seed(42)
 
+##################################### USUARIOS ############################################
+
 # Crear una lista para almacenar los datos
 data = []
 
@@ -73,3 +75,22 @@ finally:
     # Cerrar la conexión
     if conn is not None:
         conn.close()
+
+
+
+############################# RENTA #########################################
+
+# Crear una lista para almacenar los datos
+data_renta = []
+# Generar 1000 registros
+for _ in range(1000):
+    ingresos=random.randint(300, 5000)
+    data_renta.append([ingresos])
+
+renta = pd.DataFrame(data_renta, columns=['ingreso'])
+renta
+df_dni=df['dni']
+
+# Concatenar los DataFrames a lo largo de las columnas
+df_renta= pd.concat([df_dni, renta], axis=1)
+df_renta.head(10)
