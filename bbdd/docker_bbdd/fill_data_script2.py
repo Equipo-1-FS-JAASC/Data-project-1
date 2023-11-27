@@ -158,7 +158,7 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 
 try:
     # Crear una consulta de inserción
-    insert_query = sql.SQL("INSERT INTO discapcidad ({}) VALUES ({})").format(
+    insert_query = sql.SQL("INSERT INTO discapacidad ({}) VALUES ({})").format(
         sql.SQL(', ').join(map(sql.Identifier, df_discapacidad.columns)),
         sql.SQL(', ').join(sql.Placeholder() * len(df_discapacidad.columns))
     )
@@ -213,7 +213,7 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 
 try:
     # Crear una consulta de inserción
-    insert_query = sql.SQL("INSERT INTO discapcidad ({}) VALUES ({})").format(
+    insert_query = sql.SQL("INSERT INTO patrimonio ({}) VALUES ({})").format(
         sql.SQL(', ').join(map(sql.Identifier, df_patrimonio.columns)),
         sql.SQL(', ').join(sql.Placeholder() * len(df_patrimonio.columns))
     )
