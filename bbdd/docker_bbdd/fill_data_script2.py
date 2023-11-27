@@ -130,3 +130,110 @@ finally:
     # Cerrar la conexión
     if conn is not None:
         conn.close()
+
+
+
+##################################################################################
+############################# DISCACIDAD #########################################
+##################################################################################
+
+# Crear una lista para almacenar los datos
+data_discapacidad = []
+# Generar 1000 registros
+for _ in range(1000):
+    #grado=random.randint(0,4)
+    grado = random.choices([0, 1, 2, 3, 4], weights=[0.2, 0.2, 0.1, 0.002, 0.001])[0]
+    data_discapacidad.append([grado])
+
+discapcidad = pd.DataFrame(data_discapacidad, columns=['grado_dis'])
+df_dni=df['dni']
+# Concatenar los DataFrames a lo largo de las columnas
+df_discapacidad= pd.concat([df_dni, discapcidad], axis=1)
+
+
+
+# Crear una conexión para insertar los datos en la tabla discapcidad
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO discapcidad ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_discapacidad.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_discapacidad.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_discapacidad.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla discapacidad.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
+##################################################################################
+############################# PATRIMONIO #########################################
+##################################################################################
+
+
+# Crear una lista para almacenar los datos
+data_patrimonio = []
+# Generar 1000 registros
+for _ in range(1000):
+    #grado=random.randint(0,4)
+    valor =random.randint(20000, 500000)
+    coche = fake.boolean()
+    arrendador = fake.boolean()
+    data_patrimonio.append([valor,coche,arrendador])
+
+patrimonio = pd.DataFrame(data_patrimonio, columns=['valoracion_patrimonio','coche','arrendador'])
+df_dni=df['dni']
+# Concatenar los DataFrames a lo largo de las columnas
+df_patrimonio= pd.concat([df_dni, patrimonio], axis=1)
+df_patrimonio.loc[df_patrimonio['dni'] == 95822412, 'valoracion_patrimonio'] = 2000000
+
+
+
+
+# Crear una conexión para insertar los datos en la tabla patrimonio
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO discapcidad ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_patrimonio.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_patrimonio.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_patrimonio.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla patrimonio.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
