@@ -79,6 +79,9 @@ finally:
         conn.close()
 
 
+
+
+
 ##################################################################################
 ############################# RENTA ##############################################
 ##################################################################################
@@ -90,7 +93,7 @@ for _ in range(1000):
     ingresos=random.randint(300, 5000)
     data_renta.append([ingresos])
 
-renta = pd.DataFrame(data_renta, columns=['ingreso'])
+renta = pd.DataFrame(data_renta, columns=['ingresos'])
 df_dni=df['dni']
 
 # Concatenar los DataFrames a lo largo de las columnas

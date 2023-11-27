@@ -12,7 +12,7 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/mi_script.sql
 
-  python-script:
+  python_a:
     build:
       context: .
       dockerfile: Dockerfile

@@ -13,7 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar el script de llenado de datos
-COPY fill_data_script.py .
+COPY fill_data_script2.py .
+
 
 # Establecer el comando predeterminado
-CMD ["python", "fill_data_script.py"]
+CMD ["python", "fill_data_script2.py"]
