@@ -15,7 +15,9 @@ fake = Faker('es_ES')
 # Configuración del generador de números aleatorios
 random.seed(42)
 
-##################################### USUARIOS ############################################
+##################################################################################
+##################################### USUARIOS ###################################
+##################################################################################
 
 # Crear una lista para almacenar los datos
 data = []
@@ -66,7 +68,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla.")
+    print("Datos insertados correctamente en la tabla usuarios.")
 
 except Exception as e:
     print(f"Error: {e}")
@@ -77,10 +79,11 @@ finally:
         conn.close()
 
 
+##################################################################################
+############################# RENTA ##############################################
+##################################################################################
 
-############################# RENTA #########################################
-
-# Crear una lista para almacenar los datos
+# Crear una lista para almacenar los datos de la renta
 data_renta = []
 # Generar 1000 registros
 for _ in range(1000):
@@ -88,9 +91,39 @@ for _ in range(1000):
     data_renta.append([ingresos])
 
 renta = pd.DataFrame(data_renta, columns=['ingreso'])
-renta
 df_dni=df['dni']
 
 # Concatenar los DataFrames a lo largo de las columnas
 df_renta= pd.concat([df_dni, renta], axis=1)
 df_renta.head(10)
+
+
+# Crear una conexión para insertar los datos en la tabla renta
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO renta ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_renta.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_renta.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_renta.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla renta.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
