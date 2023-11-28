@@ -14,6 +14,13 @@ Segundo, creamos la tablas en la base de datos, el archivo que contiene estas ta
 Esperamos que os haya parecido justo nuestro algoritmo.:smile:
  
  
+
+
+
+
+
+ idea emojis 
+ 
 :smile: 😄
 :heart: ❤️
 :star: ⭐
