@@ -11,4 +11,6 @@ Segundo, creamos la tablas en la base de datos, el archivo que contiene estas ta
 
 
 
-Esperamos que os haya parecido justo nuestro algoritmo :smile:.
+Esperamos que os haya parecido justo nuestro algoritmo. 
+:heart: :sunny: :smile:
+:older_woman:
