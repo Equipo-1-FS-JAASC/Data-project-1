@@ -255,6 +255,37 @@ df_dni=df['dni']
 df_familia_numerosa= pd.concat([df_dni, numerosa], axis=1)
 df_familia_numerosa
 
+# Crear una conexión para insertar los datos en la tabla patrimonio
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO familia_numerosa ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_familia_numerosa.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_familia_numerosa.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_familia_numerosa.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla familia numerosa.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
 
 ##################################################################################
 ############################# HISTORIAL_USUARIOS #################################
@@ -280,6 +311,38 @@ df_historial_usuario= pd.concat([df_dni, historial], axis=1)
 df_historial_usuario[df_historial_usuario['cross_selling'] == False]
 df_historial_usuario
 
+
+# Crear una conexión para insertar los datos en la tabla patrimonio
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO historial_usuarios ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_historial_usuario.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_historial_usuario.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_historial_usuario.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla historial usuarios.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
 ##################################################################################
 ############################# SOLICITUDES ########################################
 ##################################################################################
@@ -303,26 +366,85 @@ df_solicitud= df['id_solicitud']
 df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
 df_solicitudes
 
+# Crear una conexión para insertar los datos en la tabla patrimonio
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_solicitudes.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla historial usuarios.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
 ##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
 
 lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
 
-data_hoteles = []
+data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
 
 # Generar 1000 registros
 for _ in range(1500):
     fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
     num_hab_disp = random.randint(1,10)
-    data_hoteles.append([fecha, num_hab_disp])
+    data_disponibilidad.append([fecha, num_hab_disp])
 
-hoteles = pd.DataFrame(data_hoteles, columns=['fecha_disponibilidad_hab','num_hab_disp'])
+disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
 # Concatenar los DataFrames a lo largo de las columnas
-df_hoteles = pd.concat([lista_ciudades, hoteles], axis=1)
-df_hoteles
+df_disponibilidad = pd.concat([lista_ciudades, disponibilidad],  columns=['fecha_disponibilidad_hab','num_hab_disp']axis=1)
+df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
 
-##################################################################################
-############################# HOTEL  #############################################
-##################################################################################
+
+
+# Crear una conexión para insertar los datos en la tabla patrimonio
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO disponibilidad ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_disponibilidad.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_disponibilidad.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_disponibilidad.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla historial usuarios.")
+
+except Exception as e:
+    print(f"Error: {e}")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
