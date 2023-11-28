@@ -237,3 +237,57 @@ finally:
     # Cerrar la conexión
     if conn is not None:
         conn.close()
+
+
+##################################################################################
+############################# FAMILIA_NUMEROSA ##################################
+##################################################################################
+
+fam_numerosa = []
+# Generar 1000 registros
+for _ in range(1500):
+    Tipo_fam_num = random.choices([0, 1, 2], weights=[0.5, 0.35, 0.15])[0]
+    fam_numerosa.append([Tipo_fam_num])
+
+numerosa = pd.DataFrame(fam_numerosa, columns=['Tipo_fam_num'])
+df_dni=df['dni']
+# Concatenar los DataFrames a lo largo de las columnas
+df_familia_numerosa= pd.concat([df_dni, numerosa], axis=1)
+df_familia_numerosa
+
+
+##################################################################################
+############################# HISTORIAL_USUARIOS #################################
+##################################################################################
+
+historial= []
+# Generar 1000 registros
+for _ in range(1500):
+    cross_selling = fake.boolean(chance_of_getting_true=99.9)
+    resultado_solicitud_t_1 = random.randint(70, 90)
+    viajes_t_1 = random.randint(1, 2)
+    resultado_solicitud_t_2 = random.randint(70, 90)
+    viajes_t_2 =random.randint(1, 2)
+    suma_viajes_t_1_y_t_2 = viajes_t_1 + viajes_t_2  
+    scoring_ind_participacion_previa = random.randint(50, 90)
+
+    historial.append([cross_selling,resultado_solicitud_t_1,viajes_t_1,resultado_solicitud_t_2,viajes_t_2,suma_viajes_t_1_y_t_2,scoring_ind_participacion_previa])
+
+historial = pd.DataFrame(historial, columns=['cross_selling','resultado_solicitud_t_1','viajes_t_1','resultado_solicitud_t_2','viajes_t_2','suma_viajes_t_1_y_t_2','scoring_ind_participacion_previa'])
+df_dni=df['dni']
+# Concatenar los DataFrames a lo largo de las columnas
+df_historial_usuario= pd.concat([df_dni, historial], axis=1)
+
+##################################################################################
+############################# SOLICITUDES ########################################
+##################################################################################
+
+
+##################################################################################
+############################# DISPONIBILIDAD #####################################
+##################################################################################
+
+
+##################################################################################
+############################# HOTEL  ##################################3##########
+##################################################################################
