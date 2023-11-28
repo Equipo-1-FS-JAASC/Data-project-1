@@ -263,7 +263,7 @@ df_familia_numerosa
 historial= []
 # Generar 1000 registros
 for _ in range(1500):
-    cross_selling = fake.boolean(chance_of_getting_true=99.9)
+    cross_selling = fake.boolean(False)
     resultado_solicitud_t_1 = random.randint(70, 90)
     viajes_t_1 = random.randint(1, 2)
     resultado_solicitud_t_2 = random.randint(70, 90)
@@ -277,16 +277,51 @@ historial = pd.DataFrame(historial, columns=['cross_selling','resultado_solicitu
 df_dni=df['dni']
 # Concatenar los DataFrames a lo largo de las columnas
 df_historial_usuario= pd.concat([df_dni, historial], axis=1)
+df_historial_usuario[df_historial_usuario['cross_selling'] == False]
+df_historial_usuario
 
 ##################################################################################
 ############################# SOLICITUDES ########################################
 ##################################################################################
+fake = Faker('es_ES')
+lista_ciudades = [fake.city() for _ in range(1500)]
 
+data_solicitudes = []
+# Generar 1000 registros
+for _ in range(1500):
+    anyo_solicitud = 2024
+    usuarios_sol = 0
+    renta_sol = 0
+    primera_opcion = random.choice(lista_ciudades)
+    segunda_opcion = random.choice(lista_ciudades)
+    tercera_opcion = random.choice(lista_ciudades)
+    data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
+
+solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercer_opcion'])
+df_solicitud= df['id_solicitud']
+# Concatenar los DataFrames a lo largo de las columnas
+df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
+df_solicitudes
 
 ##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
 
+lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
+
+data_hoteles = []
+start_date = datetime(2024, 1, 1)
+
+# Generar 1000 registros
+for _ in range(1500):
+    fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
+    num_hab_disp = random.randint(1,10)
+    data_hoteles.append([fecha, num_hab_disp])
+
+hoteles = pd.DataFrame(data_hoteles, columns=['fecha_disponibilidad_hab','num_hab_disp'])
+# Concatenar los DataFrames a lo largo de las columnas
+df_hoteles = pd.concat([lista_ciudades, hoteles], axis=1)
+df_hoteles
 
 ##################################################################################
 ############################# HOTEL  ##################################3##########
