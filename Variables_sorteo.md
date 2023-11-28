@@ -1,5 +1,8 @@
 # Variables Imserso
 
+![Texto Alternativo](./imagenes/bbdd.jpg)
+
+
 ## Criterios que tiene en cuenta el algoritmo para realizar el sorteo
 
 
