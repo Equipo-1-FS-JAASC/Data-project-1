@@ -1,4 +1,4 @@
-# :older_woman:BBDD Imserso
+# :older_woman: BBDD Imserso
 
 ## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación"
 
@@ -11,5 +11,16 @@ Segundo, creamos la tablas en la base de datos, el archivo que contiene estas ta
 
 
 
-Esperamos que os haya parecido justo nuestro algoritmo. 
-:heart: :sunny: :smile:
+Esperamos que os haya parecido justo nuestro algoritmo.:smile:
+ 
+ 
+:smile: 😄
+:heart: ❤️
+:star: ⭐
+:coffee: ☕
+:rocket: 🚀
+:computer: 💻
+:books: 📚
+:globe_with_meridians: 🌐
+:rainbow: 🌈
+:octocat: 🐙 
