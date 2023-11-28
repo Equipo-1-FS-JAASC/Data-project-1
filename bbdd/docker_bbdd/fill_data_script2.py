@@ -249,11 +249,11 @@ for _ in range(1500):
     Tipo_fam_num = random.choices([0, 1, 2], weights=[0.5, 0.35, 0.15])[0]
     fam_numerosa.append([Tipo_fam_num])
 
-numerosa = pd.DataFrame(fam_numerosa, columns=['Tipo_fam_num'])
+numerosa = pd.DataFrame(fam_numerosa, columns=['tipo_fam_num'])
 df_dni=df['dni']
 # Concatenar los DataFrames a lo largo de las columnas
 df_familia_numerosa= pd.concat([df_dni, numerosa], axis=1)
-df_familia_numerosa
+df_familia_numerosa = df_familia_numerosa
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
 
@@ -279,7 +279,7 @@ try:
     print("Datos insertados correctamente en la tabla familia numerosa.")
 
 except Exception as e:
-    print(f"Error: {e}")
+    print(f"Error: {e} en familia numerosa.")
 
 finally:
     # Cerrar la conexión
@@ -308,8 +308,7 @@ historial = pd.DataFrame(historial, columns=['cross_selling','resultado_solicitu
 df_dni=df['dni']
 # Concatenar los DataFrames a lo largo de las columnas
 df_historial_usuario= pd.concat([df_dni, historial], axis=1)
-df_historial_usuario[df_historial_usuario['cross_selling'] == False]
-df_historial_usuario
+
 
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
@@ -360,7 +359,7 @@ for _ in range(1500):
     tercera_opcion = random.choice(lista_ciudades)
     data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
 
-solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercer_opcion'])
+solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercera_opcion'])
 df_solicitud= df['id_solicitud']
 # Concatenar los DataFrames a lo largo de las columnas
 df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
@@ -414,7 +413,7 @@ for _ in range(1500):
 
 disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
 # Concatenar los DataFrames a lo largo de las columnas
-df_disponibilidad = pd.concat([lista_ciudades, disponibilidad],  columns=['fecha_disponibilidad_hab','num_hab_disp']axis=1)
+df_disponibilidad = pd.concat([lista_ciudades, disponibilidad],axis=1)
 df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
 
 
@@ -439,7 +438,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla historial usuarios.")
+    print("Datos insertados correctamente en la tabla disponibilidad.")
 
 except Exception as e:
     print(f"Error: {e}")
