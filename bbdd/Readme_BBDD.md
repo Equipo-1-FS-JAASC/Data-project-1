@@ -19,15 +19,3 @@ Esperamos que os haya parecido justo nuestro algoritmo.:smile:
 
 
 
- idea emojis 
-
-:smile: 😄
-:heart: ❤️
-:star: ⭐
-:coffee: ☕
-:rocket: 🚀
-:computer: 💻
-:books: 📚
-:globe_with_meridians: 🌐
-:rainbow: 🌈
-:octocat: 🐙 
