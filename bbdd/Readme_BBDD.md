@@ -1,4 +1,4 @@
-# :older_woman: BBDD Imserso
+# :older_woman: :grandma: BBDD Imserso
 
 ## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación"
 
@@ -20,7 +20,7 @@ Esperamos que os haya parecido justo nuestro algoritmo.:smile:
 
 
  idea emojis 
- 
+
 :smile: 😄
 :heart: ❤️
 :star: ⭐
