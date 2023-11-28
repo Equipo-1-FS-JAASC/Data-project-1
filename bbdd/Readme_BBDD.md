@@ -1,7 +1,7 @@
 
 # :older_woman: 🧓 BBDD Imserso
 
-![Texto Alternativo](/Users/adrianacamposnarvaez/Documents/GitHub/Data-project-1/material adicional/bbdd.png)
+![Texto Alternativo](./Documents/GitHub/Data-project-1/material adicional/bbdd.png)
 
 ## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación
 
