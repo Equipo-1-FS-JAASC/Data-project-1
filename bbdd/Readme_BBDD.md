@@ -1,4 +1,4 @@
-# :older_woman: :grandma: BBDD Imserso
+# :older_woman: 🧓 BBDD Imserso
 
 ## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación"
 
