@@ -1,6 +1,6 @@
 # :older_woman: 🧓 BBDD Imserso
 
-## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación"
+## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación
 
 
 En el archivo de configuración Docker Compose, podemos observar la secuencia de pasos que seguimos durante el desarrollo del proyecto. Primero creamos la base de datos, insertamos los datos de en las tablas. Luego ejecutamos nuestro algoritmo diseñado para realizar el sorteo, aplicando la lógica necesaria para determinar quiénes serán los beneficiarios del programa IMSERSO. Por último, culminamos el procesoeligiendo las personas que podran disfrutar de los beneficios del IMSERSO.
