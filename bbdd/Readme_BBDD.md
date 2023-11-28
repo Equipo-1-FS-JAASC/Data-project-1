@@ -1,5 +1,6 @@
+</center>
 # :older_woman: 🧓 BBDD Imserso
-
+</center>
 ## Procedimiento de Configuración de la Base de Datos: Detalles sobre la Implementación
 
 
