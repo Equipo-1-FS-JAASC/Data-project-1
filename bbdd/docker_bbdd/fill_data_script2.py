@@ -23,13 +23,13 @@ random.seed(42)
 data = []
 
 # Generar 1000 registros
-for _ in range(1000):
+for _ in range(1500):
     dni = random.randint(10000000, 99999999)  # Generar DNI de 8 dígitos
     nombre = fake.first_name()
     apellido = fake.last_name()
     edad = random.randint(70, 90)
     fecha_nacimiento = fake.date_of_birth(minimum_age=edad)
-    id_solicitud = random.randint(1, 1000)
+    id_solicitud = random.randint(1, 1500)
     usuario_solicitante = fake.boolean()
     oficio_especial = fake.boolean()
 
@@ -89,7 +89,7 @@ finally:
 # Crear una lista para almacenar los datos de la renta
 data_renta = []
 # Generar 1000 registros
-for _ in range(1000):
+for _ in range(1500):
     ingresos=random.randint(300, 5000)
     data_renta.append([ingresos])
 
@@ -140,7 +140,7 @@ finally:
 # Crear una lista para almacenar los datos
 data_discapacidad = []
 # Generar 1000 registros
-for _ in range(1000):
+for _ in range(1500):
     #grado=random.randint(0,4)
     grado = random.choices([0, 1, 2, 3, 4], weights=[0.2, 0.2, 0.1, 0.002, 0.001])[0]
     data_discapacidad.append([grado])
@@ -191,7 +191,7 @@ finally:
 # Crear una lista para almacenar los datos
 data_patrimonio = []
 # Generar 1000 registros
-for _ in range(1000):
+for _ in range(1500):
     #grado=random.randint(0,4)
     valor =random.randint(20000, 500000)
     coche = fake.boolean()
@@ -246,7 +246,8 @@ finally:
 fam_numerosa = []
 # Generar 1000 registros
 for _ in range(1500):
-    Tipo_fam_num = random.choices([0, 1, 2], weights=[0.5, 0.35, 0.15])[0]
+    #Tipo_fam_num = random.choices([0, 1, 2], weights=[0.5, 0.35, 0.15])[0]
+    Tipo_fam_num=random.randint(0, 2)
     fam_numerosa.append([Tipo_fam_num])
 
 numerosa = pd.DataFrame(fam_numerosa, columns=['tipo_fam_num'])
