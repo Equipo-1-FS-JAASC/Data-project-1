@@ -28,7 +28,7 @@ for _ in range(1500):
     dni = random.randint(10000000, 99999999)  # Generar DNI de 8 dígitos
     nombre = fake.first_name()
     apellido = fake.last_name()
-    edad = random.randint(70, 90)
+    edad = random.randint(55, 90)
     fecha_nacimiento = fake.date_of_birth(minimum_age=edad)
     id_solicitud = random.randint(1, 1500)
     usuario_solicitante = fake.boolean()
