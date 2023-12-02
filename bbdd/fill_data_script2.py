@@ -344,79 +344,36 @@ finally:
     if conn is not None:
         conn.close()
 
-##################################################################################
-############################# SOLICITUDES ########################################
-##################################################################################
-fake = Faker('es_ES')
-lista_ciudades = [fake.city() for _ in range(1500)]
 
-data_solicitudes = []
-# Generar 1000 registros
-for _ in range(1500):
-    anyo_solicitud = 2024
-    usuarios_sol = 0
-    renta_sol = 0
-    primera_opcion = random.choice(lista_ciudades)
-    segunda_opcion = random.choice(lista_ciudades)
-    tercera_opcion = random.choice(lista_ciudades)
-    data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
-
-solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercera_opcion'])
-df_solicitud= df['id_solicitud']
-# Concatenar los DataFrames a lo largo de las columnas
-df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
-df_solicitudes
-
-# Crear una conexión para insertar los datos en la tabla patrimonio
-
-conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-
-try:
-    # Crear una consulta de inserción
-    insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes.columns))
-    )
-
-    # Obtener el cursor
-    cursor = conn.cursor()
-
-    # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes.iterrows():
-        cursor.execute(insert_query, tuple(row))
-
-    # Confirmar la transacción
-    conn.commit()
-
-    print("Datos insertados correctamente en la tabla historial usuarios.")
-
-except Exception as e:
-    print(f"Error: {e}")
-
-finally:
-    # Cerrar la conexión
-    if conn is not None:
-        conn.close()
 
 ##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
 
-lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
+#generamos la lista de ciudades falsas
+lista_ciudades = [fake.city() for _ in range(1500)]
+#creamos un dataframe a partir de estas ciudades falsas
+df_lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
+valores_unicos_ciudades = df_lista_ciudades['ciudades'].unique().tolist()
+df_valores_unicos_ciudades = pd.DataFrame(valores_unicos_ciudades, columns=['ciudades'])
+
+num_ciudades=len (valores_unicos_ciudades)
 
 data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
 
 # Generar 1000 registros
-for _ in range(1500):
+for _ in range(num_ciudades):
     fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
     num_hab_disp = random.randint(1,10)
+    
     data_disponibilidad.append([fecha, num_hab_disp])
 
 disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
 # Concatenar los DataFrames a lo largo de las columnas
-df_disponibilidad = pd.concat([lista_ciudades, disponibilidad],axis=1)
+df_disponibilidad = pd.concat([df_valores_unicos_ciudades, disponibilidad], axis=1)
 df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
+df_disponibilidad
 
 
 
@@ -443,9 +400,71 @@ try:
     print("Datos insertados correctamente en la tabla disponibilidad.")
 
 except Exception as e:
-    print(f"Error: {e}")
+    print(f"Error: {e} disponibilidad")
 
 finally:
     # Cerrar la conexión
     if conn is not None:
         conn.close()
+
+      
+
+
+##################################################################################
+############################# SOLICITUDES ########################################
+##################################################################################
+
+#cogemos solo los valores uncios de la tabla usuarios
+valores_unicos = df['id_solicitud'].unique().tolist()
+df_solicitud = pd.DataFrame(valores_unicos, columns=['id_solicitud'])
+
+num_solicitud=len(df_solicitud)
+data_solicitudes = []
+
+# Generar 1000 registros
+for _ in range(num_solicitud):
+   anyo_solicitud = 2024
+   usuarios_sol = 'a'
+   renta_sol = 0
+   primera_opcion = random.choice(lista_ciudades)
+   segunda_opcion = random.choice(lista_ciudades)
+   tercera_opcion = random.choice(lista_ciudades)
+
+   data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
+
+solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercera_opcion'])
+# Concatenar los DataFrames a lo largo de las columnas
+df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
+
+# Crear una conexión para insertar los datos en la tabla patrimonio
+
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in df_solicitudes.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla solicitudes.")
+
+except Exception as e:
+    print(f"Error: {e} en solicitudes")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
+

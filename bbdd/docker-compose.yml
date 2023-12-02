@@ -12,7 +12,7 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  python_i:
+  python_m8:
     build:
       context: .
       dockerfile: Dockerfile
