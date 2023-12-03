@@ -66,7 +66,7 @@ CREATE TABLE tipo_resolucion (
 -- Crear tabla disponibilidad
 CREATE TABLE disponibilidad (
     id_hotel VARCHAR(255)  PRIMARY KEY,
-    fecha_disponibilidad_hab DATE,
+    fecha_disponibilidad_hab DATE PRIMARY KEY,
     num_hab_disp INT
 );
 
@@ -91,11 +91,11 @@ CREATE TABLE patrimonio (
 );
 
 -- Crear tabla hoteles
-CREATE TABLE hoteles (
-    id_hotel INT PRIMARY KEY,
-    nombre VARCHAR(255),
-    ciudad VARCHAR(255)
-);
+--CREATE TABLE hoteles (
+   -- id_hotel INT PRIMARY KEY,
+    --nombre VARCHAR(255),
+    --ciudad VARCHAR(255)
+--);
 
 CREATE TABLE destinos (
     id_destinos INT PRIMARY KEY,

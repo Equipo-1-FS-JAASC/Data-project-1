@@ -7,6 +7,15 @@ from psycopg2 import sql
 import time
 import numpy as np 
 
+
+#Coonexion a BBDD............................................................................
+
+dbname = "DBInmerso"
+user = "postgres"
+password = "postgres"
+host = "postgres"
+port = "5432"
+
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
 time.sleep(10)
 
@@ -40,13 +49,7 @@ for _ in range(1500):
 df = pd.DataFrame(data, columns=['dni', 'nombre', 'apellido', 'edad', 'fecha_de_nacimiento', 'id_solicitud', 'usuario_solicitante', 'oficio_especial'])
 
 
-#Coonexion a BBDD............................................................................
 
-dbname = "DBInmerso"
-user = "postgres"
-password = "postgres"
-host = "postgres"
-port = "5432"
 
 # Crear una conexión
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
@@ -349,31 +352,25 @@ finally:
 ##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
-
 #generamos la lista de ciudades falsas
 lista_ciudades = [fake.city() for _ in range(1500)]
-#creamos un dataframe a partir de estas ciudades falsas
 df_lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
-valores_unicos_ciudades = df_lista_ciudades['ciudades'].unique().tolist()
-df_valores_unicos_ciudades = pd.DataFrame(valores_unicos_ciudades, columns=['ciudades'])
-
-num_ciudades=len (valores_unicos_ciudades)
 
 data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
 
 # Generar 1000 registros
-for _ in range(num_ciudades):
+for _ in range(2000):
     fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
     num_hab_disp = random.randint(1,10)
-    
+
     data_disponibilidad.append([fecha, num_hab_disp])
 
 disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
 # Concatenar los DataFrames a lo largo de las columnas
-df_disponibilidad = pd.concat([df_valores_unicos_ciudades, disponibilidad], axis=1)
+df_disponibilidad = pd.concat([df_lista_ciudades, disponibilidad], axis=1)
 df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
-df_disponibilidad
+
 
 
 
