@@ -411,27 +411,55 @@ finally:
 ############################# SOLICITUDES ########################################
 ##################################################################################
 
-#cogemos solo los valores uncios de la tabla usuarios
+
+#cogemos solo los valores unicos de la tabla usuarios
 valores_unicos = df['id_solicitud'].unique().tolist()
 df_solicitud = pd.DataFrame(valores_unicos, columns=['id_solicitud'])
 
+
+# esta tabla tendrá el mismo tamañano que la de solicitudes
+
 num_solicitud=len(df_solicitud)
+print(num_solicitud)
 data_solicitudes = []
 
 # Generar 1000 registros
 for _ in range(num_solicitud):
    anyo_solicitud = 2024
-   usuarios_sol = 'a'
+   usuarios_sol = 0
    renta_sol = 0
-   primera_opcion = random.choice(lista_ciudades)
-   segunda_opcion = random.choice(lista_ciudades)
-   tercera_opcion = random.choice(lista_ciudades)
 
-   data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
+   data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol])
 
-solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercera_opcion'])
-# Concatenar los DataFrames a lo largo de las columnas
+solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol'])
+
+# Concatenar los DataFrames con los ID solicitud de la tabla usuarios
 df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
+df_solicitudes
+
+#cogemos la tabla de disponibilidad para que coincida 
+
+col= ['id_hotel',	'fecha_disponibilidad_hab']
+
+df_disponibilidad_col =df_disponibilidad[col].sort_values(by='id_hotel')
+df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
+df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilidad_hab': 'fecha_1op'}, inplace=True)
+
+
+df_desordenado = df_solicitudes1.sample(frac=1).reset_index(drop=True)
+df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad], axis=1)
+df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
+
+df_desordenado2 = df_solicitudes2.sample(frac=1).reset_index(drop=True)
+df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad], axis=1)
+df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
+
+
+df_solicitudes_final= df_solicitudes_final.head(num_solicitud)
+df_solicitudes_final
+
+
+
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
 
@@ -440,15 +468,15 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes.iterrows():
+    for _, row in df_solicitudes_final.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
