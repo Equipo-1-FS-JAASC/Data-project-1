@@ -8,13 +8,7 @@ import time
 import numpy as np 
 
 
-#Coonexion a BBDD............................................................................
 
-dbname = "DBInmerso"
-user = "postgres"
-password = "postgres"
-host = "postgres"
-port = "5432"
 
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
 time.sleep(10)
@@ -49,7 +43,13 @@ for _ in range(1500):
 df = pd.DataFrame(data, columns=['dni', 'nombre', 'apellido', 'edad', 'fecha_de_nacimiento', 'id_solicitud', 'usuario_solicitante', 'oficio_especial'])
 
 
+#Coonexion a BBDD............................................................................
 
+dbname = "DBInmerso"
+user = "postgres"
+password = "postgres"
+host = "postgres"
+port = "5432"
 
 # Crear una conexión
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
@@ -149,10 +149,10 @@ for _ in range(1500):
     grado = random.choices([0, 1, 2, 3, 4], weights=[0.2, 0.2, 0.1, 0.002, 0.001])[0]
     data_discapacidad.append([grado])
 
-discapcidad = pd.DataFrame(data_discapacidad, columns=['grado_dis'])
+discapacidad = pd.DataFrame(data_discapacidad, columns=['grado_dis'])
 df_dni=df['dni']
 # Concatenar los DataFrames a lo largo de las columnas
-df_discapacidad= pd.concat([df_dni, discapcidad], axis=1)
+df_discapacidad= pd.concat([df_dni, discapacidad], axis=1)
 
 
 
@@ -352,25 +352,29 @@ finally:
 ##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
-#generamos la lista de ciudades falsas
-lista_ciudades = [fake.city() for _ in range(1500)]
-df_lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
 
 data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
 
-# Generar 1000 registros
+#
 for _ in range(2000):
+    ciudades = fake.city()
     fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
     num_hab_disp = random.randint(1,10)
 
-    data_disponibilidad.append([fecha, num_hab_disp])
+    data_disponibilidad.append([ciudades,fecha, num_hab_disp])
 
-disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
-# Concatenar los DataFrames a lo largo de las columnas
-df_disponibilidad = pd.concat([df_lista_ciudades, disponibilidad], axis=1)
-df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
+df_disponibilidad = pd.DataFrame(data_disponibilidad, columns=['id_hotel','fecha_disponibilidad_hab','num_hab_disp'])
 
+# Contar cuántas filas tienen los mismos valores en id_hotel y fecha_disponibilidad_hab
+conteo_filas = df_disponibilidad.groupby(['id_hotel', 'fecha_disponibilidad_hab']).size().reset_index(name='conteo')
+# Fusionar el DataFrame original con el DataFrame de conteo
+df_disponibilidad_con_conteo = pd.merge(df_disponibilidad, conteo_filas, on=['id_hotel', 'fecha_disponibilidad_hab'], how='left')
+df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo']>1].sort_values(by='id_hotel')
+#filtramos
+df_disponibilidad = df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo'] <= 1].sort_values(by='id_hotel')
+df_disponibilidad.drop(columns='conteo', inplace=True)
+df_disponibilidad
 
 
 
@@ -439,7 +443,7 @@ df_solicitudes
 
 #cogemos la tabla de disponibilidad para que coincida 
 
-col= ['id_hotel',	'fecha_disponibilidad_hab']
+col= ['id_hotel','fecha_disponibilidad_hab']
 
 df_disponibilidad_col =df_disponibilidad[col].sort_values(by='id_hotel')
 df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
@@ -447,11 +451,11 @@ df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilid
 
 
 df_desordenado = df_solicitudes1.sample(frac=1).reset_index(drop=True)
-df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad], axis=1)
+df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad_col], axis=1)
 df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
 
 df_desordenado2 = df_solicitudes2.sample(frac=1).reset_index(drop=True)
-df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad], axis=1)
+df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad_col], axis=1)
 df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
 
 
