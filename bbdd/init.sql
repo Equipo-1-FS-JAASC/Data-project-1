@@ -120,6 +120,9 @@ CREATE TABLE solicitudes (
     usuarios_sol VARCHAR(255),
     renta_sol INT,
     primera_opcion VARCHAR(255),
+    fecha_1op DATE,
     segunda_opcion VARCHAR(255),
-    tercera_opcion VARCHAR(255)
+    fecha_2op DATE,
+    tercera_opcion VARCHAR(255),
+    fecha_3op DATE
 );
