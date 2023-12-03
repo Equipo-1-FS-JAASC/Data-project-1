@@ -7,6 +7,9 @@ from psycopg2 import sql
 import time
 import numpy as np 
 
+
+
+
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
 time.sleep(10)
 
@@ -28,7 +31,7 @@ for _ in range(1500):
     dni = random.randint(10000000, 99999999)  # Generar DNI de 8 dígitos
     nombre = fake.first_name()
     apellido = fake.last_name()
-    edad = random.randint(70, 90)
+    edad = random.randint(55, 90)
     fecha_nacimiento = fake.date_of_birth(minimum_age=edad)
     id_solicitud = random.randint(1, 1500)
     usuario_solicitante = fake.boolean()
@@ -146,10 +149,10 @@ for _ in range(1500):
     grado = random.choices([0, 1, 2, 3, 4], weights=[0.2, 0.2, 0.1, 0.002, 0.001])[0]
     data_discapacidad.append([grado])
 
-discapcidad = pd.DataFrame(data_discapacidad, columns=['grado_dis'])
+discapacidad = pd.DataFrame(data_discapacidad, columns=['grado_dis'])
 df_dni=df['dni']
 # Concatenar los DataFrames a lo largo de las columnas
-df_discapacidad= pd.concat([df_dni, discapcidad], axis=1)
+df_discapacidad= pd.concat([df_dni, discapacidad], axis=1)
 
 
 
@@ -350,29 +353,27 @@ finally:
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
 
-#generamos la lista de ciudades falsas
-lista_ciudades = [fake.city() for _ in range(1500)]
-#creamos un dataframe a partir de estas ciudades falsas
-df_lista_ciudades = pd.DataFrame(lista_ciudades, columns=['ciudades'])
-valores_unicos_ciudades = df_lista_ciudades['ciudades'].unique().tolist()
-df_valores_unicos_ciudades = pd.DataFrame(valores_unicos_ciudades, columns=['ciudades'])
-
-num_ciudades=len (valores_unicos_ciudades)
-
 data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
 
-# Generar 1000 registros
-for _ in range(num_ciudades):
+#
+for _ in range(2000):
+    ciudades = fake.city()
     fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
     num_hab_disp = random.randint(1,10)
-    
-    data_disponibilidad.append([fecha, num_hab_disp])
 
-disponibilidad = pd.DataFrame(data_disponibilidad, columns=['fecha_disponibilidad_hab','num_hab_disp'])
-# Concatenar los DataFrames a lo largo de las columnas
-df_disponibilidad = pd.concat([df_valores_unicos_ciudades, disponibilidad], axis=1)
-df_disponibilidad.rename(columns={'ciudades': 'id_hotel'}, inplace=True)
+    data_disponibilidad.append([ciudades,fecha, num_hab_disp])
+
+df_disponibilidad = pd.DataFrame(data_disponibilidad, columns=['id_hotel','fecha_disponibilidad_hab','num_hab_disp'])
+
+# Contar cuántas filas tienen los mismos valores en id_hotel y fecha_disponibilidad_hab
+conteo_filas = df_disponibilidad.groupby(['id_hotel', 'fecha_disponibilidad_hab']).size().reset_index(name='conteo')
+# Fusionar el DataFrame original con el DataFrame de conteo
+df_disponibilidad_con_conteo = pd.merge(df_disponibilidad, conteo_filas, on=['id_hotel', 'fecha_disponibilidad_hab'], how='left')
+df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo']>1].sort_values(by='id_hotel')
+#filtramos
+df_disponibilidad = df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo'] <= 1].sort_values(by='id_hotel')
+df_disponibilidad.drop(columns='conteo', inplace=True)
 df_disponibilidad
 
 
@@ -414,27 +415,55 @@ finally:
 ############################# SOLICITUDES ########################################
 ##################################################################################
 
-#cogemos solo los valores uncios de la tabla usuarios
+
+#cogemos solo los valores unicos de la tabla usuarios
 valores_unicos = df['id_solicitud'].unique().tolist()
 df_solicitud = pd.DataFrame(valores_unicos, columns=['id_solicitud'])
 
+
+# esta tabla tendrá el mismo tamañano que la de solicitudes
+
 num_solicitud=len(df_solicitud)
+print(num_solicitud)
 data_solicitudes = []
 
 # Generar 1000 registros
 for _ in range(num_solicitud):
    anyo_solicitud = 2024
-   usuarios_sol = 'a'
+   usuarios_sol = 0
    renta_sol = 0
-   primera_opcion = random.choice(lista_ciudades)
-   segunda_opcion = random.choice(lista_ciudades)
-   tercera_opcion = random.choice(lista_ciudades)
 
-   data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol,primera_opcion,segunda_opcion,tercera_opcion])
+   data_solicitudes.append([anyo_solicitud,usuarios_sol,renta_sol])
 
-solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol','primera_opcion','segunda_opcion','tercera_opcion'])
-# Concatenar los DataFrames a lo largo de las columnas
+solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios_sol','renta_sol'])
+
+# Concatenar los DataFrames con los ID solicitud de la tabla usuarios
 df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
+df_solicitudes
+
+#cogemos la tabla de disponibilidad para que coincida 
+
+col= ['id_hotel','fecha_disponibilidad_hab']
+
+df_disponibilidad_col =df_disponibilidad[col].sort_values(by='id_hotel')
+df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
+df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilidad_hab': 'fecha_1op'}, inplace=True)
+
+
+df_desordenado = df_solicitudes1.sample(frac=1).reset_index(drop=True)
+df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad_col], axis=1)
+df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
+
+df_desordenado2 = df_solicitudes2.sample(frac=1).reset_index(drop=True)
+df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad_col], axis=1)
+df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
+
+
+df_solicitudes_final= df_solicitudes_final.head(num_solicitud)
+df_solicitudes_final
+
+
+
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
 
@@ -443,15 +472,15 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes.iterrows():
+    for _, row in df_solicitudes_final.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
