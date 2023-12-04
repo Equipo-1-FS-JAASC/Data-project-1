@@ -12,22 +12,22 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  python_a:
+  python_ad:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - postgres 
   
-  jupyter:
-    container_name: jupyter_notebookd
-    image: jupyter/base-notebook:latest
-    build: ./jupyter
+  #jupyter:
+   # container_name: jupyter_notebookd
+    #image: jupyter/base-notebook:latest
+    #build: ./jupyter
     
-    depends_on:
-      - postgres
+   # depends_on:
+    #  - postgres
     #volumes:
      #- ./scoring_jupyter.ipynb:/home/jovyan/work/datos/
     # - ./scoring_jupyter.ipynb:/home/jovyan/work/
-    ports:
-      - "10000:8888"
+   ##ports:
+     # - "10000:8888"

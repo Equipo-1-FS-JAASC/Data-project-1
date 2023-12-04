@@ -78,15 +78,15 @@ try:
 
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO usuarios ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_usuarios.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_usuarios.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df.iterrows():
+    for _, row in df_usuarios.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
@@ -525,4 +525,17 @@ finally:
     if conn is not None:
         conn.close()
 
+
+
+print ('Se han insertado todas las tablas correctamente')
+print ('------------------------------------------------')
+################################################################################################
+
+#df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
+
+#df_solicitudes_final
+
+#resultado_left_join = pd.merge(df1, df2, on='ID', how='left')
+
+#df_usuarios
 
