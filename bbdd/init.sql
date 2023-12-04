@@ -49,12 +49,17 @@ CREATE TABLE renta (
 -- Crear tabla scoring
 CREATE TABLE scoring (
     id_solicitud VARCHAR(9) PRIMARY KEY,
-    total FLOAT,
-    edad FLOAT,
-    discapacidad FLOAT,
-    ingresos FLOAT,
-    agregado_part_previa FLOAT,
-    fam_num FLOAT
+    score FLOAT,
+    edad_score FLOAT,
+    discapacidad_score FLOAT,
+    coche_score FLOAT,
+    arrendador_score FLOAT,
+    oficio_especial_score FLOAT,
+    familia_score FLOAT,
+    renta_score FLOAT,
+    part_previa_score FLOAT,
+    patrimonio_score FLOAT
+
 );
 
 -- Crear tabla tipo_resolucion
