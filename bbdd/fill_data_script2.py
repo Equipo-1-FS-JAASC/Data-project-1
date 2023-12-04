@@ -75,6 +75,7 @@ try:
     print("Datos insertados correctamente en la tabla usuarios.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e}")
 
 finally:
@@ -128,6 +129,7 @@ try:
     print("Datos insertados correctamente en la tabla renta.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e}")
 
 finally:
@@ -180,6 +182,7 @@ try:
     print("Datos insertados correctamente en la tabla discapacidad.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e}")
 
 finally:
@@ -235,6 +238,7 @@ try:
     print("Datos insertados correctamente en la tabla patrimonio.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e}")
 
 finally:
@@ -284,6 +288,7 @@ try:
     print("Datos insertados correctamente en la tabla familia numerosa.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e} en familia numerosa.")
 
 finally:
@@ -340,6 +345,7 @@ try:
     print("Datos insertados correctamente en la tabla historial usuarios.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e}")
 
 finally:
@@ -401,6 +407,7 @@ try:
     print("Datos insertados correctamente en la tabla disponibilidad.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e} disponibilidad")
 
 finally:
@@ -424,7 +431,6 @@ df_solicitud = pd.DataFrame(valores_unicos, columns=['id_solicitud'])
 # esta tabla tendrá el mismo tamañano que la de solicitudes
 
 num_solicitud=len(df_solicitud)
-print(num_solicitud)
 data_solicitudes = []
 
 # Generar 1000 registros
@@ -441,9 +447,10 @@ solicitudes = pd.DataFrame(data_solicitudes, columns=['anyo_solicitud','usuarios
 df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
 df_solicitudes
 
-#cogemos la tabla de disponibilidad para que coincida 
 
-col= ['id_hotel','fecha_disponibilidad_hab']
+#cogemos la tabla de disponibilidad para que coincida
+
+col= ['id_hotel',	'fecha_disponibilidad_hab']
 
 df_disponibilidad_col =df_disponibilidad[col].sort_values(by='id_hotel')
 df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
@@ -459,7 +466,7 @@ df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad_col], axis=
 df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
 
 
-df_solicitudes_final= df_solicitudes_final.head(num_solicitud)
+df_solicitudes_final = df_solicitudes_final.dropna()
 df_solicitudes_final
 
 
@@ -489,6 +496,7 @@ try:
     print("Datos insertados correctamente en la tabla solicitudes.")
 
 except Exception as e:
+    print ("------------------------------")
     print(f"Error: {e} en solicitudes")
     print(f"Row causing the error: {row}")
 
