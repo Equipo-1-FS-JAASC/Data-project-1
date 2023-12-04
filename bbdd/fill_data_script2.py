@@ -490,6 +490,7 @@ try:
 
 except Exception as e:
     print(f"Error: {e} en solicitudes")
+    print(f"Row causing the error: {row}")
 
 finally:
     # Cerrar la conexión
