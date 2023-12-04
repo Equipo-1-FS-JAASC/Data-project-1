@@ -526,9 +526,10 @@ finally:
         conn.close()
 
 
-
+print ('------------------------------------------------')
 print ('Se han insertado todas las tablas correctamente')
 print ('------------------------------------------------')
+
 ################################################################################################
 
 #df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
