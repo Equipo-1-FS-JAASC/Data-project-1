@@ -49,7 +49,7 @@ CREATE TABLE renta (
 -- Crear tabla scoring
 CREATE TABLE scoring (
     id_solicitud VARCHAR(9) PRIMARY KEY,
-    index_ INT
+    index_ INT,
     score FLOAT,
     edad_score FLOAT,
     discapacidad_score FLOAT,
