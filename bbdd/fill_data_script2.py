@@ -11,7 +11,7 @@ import numpy as np
 
 
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
-time.sleep(10)
+time.sleep(5)
 
 # Configuración de Faker
 fake = Faker('es_ES')
@@ -219,7 +219,7 @@ data_patrimonio = []
 # Generar 1000 registros
 for _ in range(1500):
     #grado=random.randint(0,4)
-    valor =random.randint(20000, 500000)
+    valor =random.randint(20000, 400000)
     coche = fake.boolean()
     arrendador = fake.boolean()
     data_patrimonio.append([valor,coche,arrendador])
