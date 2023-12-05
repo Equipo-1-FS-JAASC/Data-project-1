@@ -325,9 +325,9 @@ historial= []
 # Generar 1000 registros
 for _ in range(1500):
     cross_selling = fake.boolean(False)
-    resultado_solicitud_t_1 = random.randint(70, 90)
+    resultado_solicitud_t_1 = random.randint(0, 3)
     viajes_t_1 = random.randint(1, 2)
-    resultado_solicitud_t_2 = random.randint(70, 90)
+    resultado_solicitud_t_2 = random.randint(0, 3)
     viajes_t_2 =random.randint(1, 2)
     suma_viajes_t_1_y_t_2 = viajes_t_1 + viajes_t_2  
     scoring_ind_participacion_previa = random.randint(50, 90)
