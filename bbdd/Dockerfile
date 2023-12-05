@@ -14,7 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt \
 
 # Copiar el script de llenado de datos
 COPY fill_data_script2.py .
+COPY data_quality.py .
 
 
 # Establecer el comando predeterminado
 CMD ["python", "fill_data_script2.py"]
+#CMD ["python", "fill_data_script2.py", "data_quality.py", "&&", "python", "data_quality.py"]
+#CMD ["python", "data_quality.py"]

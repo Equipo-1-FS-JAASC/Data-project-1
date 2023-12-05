@@ -54,14 +54,13 @@ indices_a_actualizar = df.index[filas_a_actualizar]
 
 # Asignar valores aleatorios de 5 cifras a 'id_solicitud' para las filas seleccionadas
 df.loc[indices_a_actualizar, 'id_solicitud'] = [random.randint(30001, 59999) for _ in indices_a_actualizar]
-df_usuarios = df.drop('conteo_id_solicitud', axis=1)
-
+df = df.drop('conteo_id_solicitud', axis=1)
+df_usuarios = df
 #VALIDAMOS
 df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 filas_a_actualizar = df_usuarios[df_usuarios['conteo'] > 2]
 df_usuarios = df_usuarios.drop('conteo', axis=1)
 
-df_usuarios
 
 #Coonexion a BBDD............................................................................
 
@@ -582,3 +581,6 @@ print ('------------------------------------------------')
 
 
 
+print ('------------------------------------------------')
+print ('Paso 2')
+print ('------------------------------------------------')
