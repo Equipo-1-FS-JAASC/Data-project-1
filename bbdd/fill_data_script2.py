@@ -11,7 +11,7 @@ import numpy as np
 
 
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
-time.sleep(5)
+time.sleep(10)
 
 # Configuración de Faker
 fake = Faker('es_ES')
@@ -114,7 +114,7 @@ finally:
 data_renta = []
 # Generar 1000 registros
 for _ in range(1500):
-    ingresos=random.randint(300, 5000)
+    ingresos=random.randint(300, 2500)
     data_renta.append([ingresos])
 
 renta = pd.DataFrame(data_renta, columns=['ingresos'])
