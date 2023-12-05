@@ -468,6 +468,12 @@ df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
 df_solicitudes
 
 
+
+###########################################################################################################################
+################################# Campos calculados en la tabla solicitudes ###############################################
+###########################################################################################################################
+
+
 #cogemos la tabla de disponibilidad para que coincida
 
 col= ['id_hotel',	'fecha_disponibilidad_hab']
@@ -490,6 +496,44 @@ df_solicitudes_final = df_solicitudes_final.dropna()
 df_solicitudes_final
 
 
+# para la columna usuarios solicitud necesitamos calcular cuantos usuarios tienen esa solicitud
+df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
+col= ['id_solicitud','conteo']
+df_usuarios_merge1 = df_usuarios[col]
+df_usuarios_merge1 = df_usuarios_merge1.drop_duplicates()
+#merge
+df_solicitudes_final_1 = pd.merge(df_solicitudes_final, df_usuarios_merge1, on='id_solicitud', how='left')
+df_solicitudes_final_1['usuarios_sol'] = df_solicitudes_final_1['conteo']
+df_solicitudes_final_1= df_solicitudes_final_1.drop('conteo', axis=1)
+
+
+# para saber la renta conjunto de esa solicitud tenemos que hacer algo parecido, agrupar la solicitud por renta
+df_renta_merge_usuarios = pd.merge(df_usuarios, df_renta, on='dni', how='left')
+df_renta_merge_usuarios['ingresos_solicitud'] = df_renta_merge_usuarios.groupby('id_solicitud')['ingresos'].transform('sum')
+col= ['id_solicitud','ingresos_solicitud']
+df_usuarios_merge_ingresos = df_renta_merge_usuarios[col]
+df_usuarios_merge_ingresos = df_usuarios_merge_ingresos.drop_duplicates()
+#merge
+df_solicitudes_final_2 = pd.merge(df_solicitudes_final_1, df_usuarios_merge_ingresos, on='id_solicitud', how='left')
+df_solicitudes_final_2['renta_sol'] = df_solicitudes_final_2['ingresos_solicitud']
+df_solicitudes_final_2= df_solicitudes_final_2.drop('ingresos_solicitud', axis=1)
+df_solicitudes_final_2
+
+
+# para saber la patrimonio conjunto de esa solicitud tenemos que hacer algo parecido, agrupar la solicitud por patrimonio
+
+df_renta_merge_usuarios_patrimonio = pd.merge(df_usuarios,df_patrimonio [['dni','valoracion_patrimonio']], on='dni', how='left')
+df_renta_merge_usuarios_patrimonio['patrimonio_solicitud'] = df_renta_merge_usuarios_patrimonio.groupby('id_solicitud')['valoracion_patrimonio'].transform('sum')
+df_renta_merge_usuarios_patrimonio = df_renta_merge_usuarios_patrimonio[['id_solicitud','patrimonio_solicitud']]
+df_renta_merge_usuarios_patrimonio = df_renta_merge_usuarios_patrimonio.drop_duplicates()
+#merge
+df_solicitudes_final_3 = pd.merge(df_solicitudes_final_2, df_renta_merge_usuarios_patrimonio, on='id_solicitud', how='left')
+df_solicitudes_final_3['patrimonio_sol'] = df_solicitudes_final_3['patrimonio_solicitud']
+df_solicitudes_final_3= df_solicitudes_final_3.drop('patrimonio_solicitud', axis=1)
+df_solicitudes_final_3
+
+###################################################################################################################
+
 
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
@@ -499,15 +543,15 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final_3.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final_3.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes_final.iterrows():
+    for _, row in df_solicitudes_final_3.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
@@ -526,17 +570,15 @@ finally:
         conn.close()
 
 
+
+
+
+
+
 print ('------------------------------------------------')
 print ('Se han insertado todas las tablas correctamente')
 print ('------------------------------------------------')
 
-################################################################################################
 
-#df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 
-#df_solicitudes_final
-
-#resultado_left_join = pd.merge(df1, df2, on='ID', how='left')
-
-#df_usuarios
 

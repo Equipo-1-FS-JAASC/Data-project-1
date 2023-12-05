@@ -2,6 +2,7 @@ version: '3'
 
 services:
   postgres:
+    container_name: postgres
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
@@ -12,7 +13,8 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  python_00:
+  python_12:
+    container_name: python
     build:
       context: .
       dockerfile: Dockerfile
