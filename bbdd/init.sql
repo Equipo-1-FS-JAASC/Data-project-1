@@ -120,7 +120,7 @@ CREATE TABLE solicitudes (
     anyo_solicitud INT,
     usuarios_sol VARCHAR(255),
     renta_sol INT,
-    patrimonio_sol, INT
+    patrimonio_sol INT,
     primera_opcion VARCHAR(255),
     fecha_1op DATE,
     segunda_opcion VARCHAR(255),
