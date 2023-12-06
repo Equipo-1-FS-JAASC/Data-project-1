@@ -532,15 +532,15 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes1.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes1.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final_3.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final_3.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes1.iterrows():
+    for _, row in df_solicitudes_final_3.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
