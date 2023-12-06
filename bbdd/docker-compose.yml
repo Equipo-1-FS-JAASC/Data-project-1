@@ -21,15 +21,4 @@ services:
     depends_on:
       - postgres 
   
-  #jupyter:
-   # container_name: jupyter_notebookd
-    #image: jupyter/base-notebook:latest
-    #build: ./jupyter
-    
-   # depends_on:
-    #  - postgres
-    #volumes:
-     #- ./scoring_jupyter.ipynb:/home/jovyan/work/datos/
-    # - ./scoring_jupyter.ipynb:/home/jovyan/work/
-   ##ports:
-     # - "10000:8888"
+ 

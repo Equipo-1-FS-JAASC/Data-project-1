@@ -516,7 +516,7 @@ df_solicitudes_final_3
 
 
 
-#Añadimos: cogemos la tabla de disponibilidad para que coincida
+#Añadimos los viajes a solicitudes 
 
 df_disponibilidad_col =df_disponibilidad[['id_hotel','fecha_disponibilidad_hab']].sort_values(by='id_hotel')
 df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
@@ -536,8 +536,8 @@ df_solicitudes_final
 ###################################################################################################################
 
 
+# Crear una conexión para insertar los datos en la tabla solicitudes
 
-# Crear una conexión para insertar los datos en la tabla patrimonio
 
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 
