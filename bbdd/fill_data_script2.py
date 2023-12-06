@@ -473,37 +473,18 @@ df_solicitudes
 ###########################################################################################################################
 
 
-#cogemos la tabla de disponibilidad para que coincida
-
-col= ['id_hotel',	'fecha_disponibilidad_hab']
-
-df_disponibilidad_col =df_disponibilidad[col].sort_values(by='id_hotel')
-df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
-df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilidad_hab': 'fecha_1op'}, inplace=True)
-
-
-df_desordenado = df_solicitudes1.sample(frac=1).reset_index(drop=True)
-df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad_col], axis=1)
-df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
-
-df_desordenado2 = df_solicitudes2.sample(frac=1).reset_index(drop=True)
-df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad_col], axis=1)
-df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
-
-
-df_solicitudes_final = df_solicitudes_final.dropna()
-df_solicitudes_final
-
 
 # para la columna usuarios solicitud necesitamos calcular cuantos usuarios tienen esa solicitud
 df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 col= ['id_solicitud','conteo']
 df_usuarios_merge1 = df_usuarios[col]
 df_usuarios_merge1 = df_usuarios_merge1.drop_duplicates()
-#merge
-df_solicitudes_final_1 = pd.merge(df_solicitudes_final, df_usuarios_merge1, on='id_solicitud', how='left')
+#merges
+df_solicitudes_final_1 = pd.merge(df_solicitudes, df_usuarios_merge1, on='id_solicitud', how='left')
 df_solicitudes_final_1['usuarios_sol'] = df_solicitudes_final_1['conteo']
 df_solicitudes_final_1= df_solicitudes_final_1.drop('conteo', axis=1)
+
+
 
 
 # para saber la renta conjunto de esa solicitud tenemos que hacer algo parecido, agrupar la solicitud por renta
@@ -519,8 +500,8 @@ df_solicitudes_final_2= df_solicitudes_final_2.drop('ingresos_solicitud', axis=1
 df_solicitudes_final_2
 
 
-# para saber la patrimonio conjunto de esa solicitud tenemos que hacer algo parecido, agrupar la solicitud por patrimonio
 
+# para saber la patrimonio conjunto de esa solicitud tenemos que hacer algo parecido, agrupar la solicitud por patrimonio
 df_renta_merge_usuarios_patrimonio = pd.merge(df_usuarios,df_patrimonio [['dni','valoracion_patrimonio']], on='dni', how='left')
 df_renta_merge_usuarios_patrimonio['patrimonio_solicitud'] = df_renta_merge_usuarios_patrimonio.groupby('id_solicitud')['valoracion_patrimonio'].transform('sum')
 df_renta_merge_usuarios_patrimonio = df_renta_merge_usuarios_patrimonio[['id_solicitud','patrimonio_solicitud']]
@@ -530,6 +511,27 @@ df_solicitudes_final_3 = pd.merge(df_solicitudes_final_2, df_renta_merge_usuario
 df_solicitudes_final_3['patrimonio_sol'] = df_solicitudes_final_3['patrimonio_solicitud']
 df_solicitudes_final_3= df_solicitudes_final_3.drop('patrimonio_solicitud', axis=1)
 df_solicitudes_final_3
+
+
+
+
+
+#Añadimos: cogemos la tabla de disponibilidad para que coincida
+
+df_disponibilidad_col =df_disponibilidad[['id_hotel','fecha_disponibilidad_hab']].sort_values(by='id_hotel')
+df_solicitudes1 = pd.concat([df_solicitudes, df_disponibilidad_col], axis=1)
+df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilidad_hab': 'fecha_1op'}, inplace=True)
+
+df_desordenado = df_solicitudes1.sample(frac=1).reset_index(drop=True)
+df_solicitudes2 = pd.concat([df_desordenado, df_disponibilidad_col], axis=1)
+df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
+
+df_desordenado2 = df_solicitudes2.sample(frac=1).reset_index(drop=True)
+df_solicitudes_final = pd.concat([df_desordenado2, df_disponibilidad_col], axis=1)
+df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
+
+df_solicitudes_final = df_solicitudes_final.dropna()
+df_solicitudes_final
 
 ###################################################################################################################
 

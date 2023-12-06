@@ -64,10 +64,10 @@ CREATE TABLE scoring (
 );
 
 -- Crear tabla tipo_resolucion
-CREATE TABLE tipo_resolucion (
-    id_resolucion INT PRIMARY KEY,
-    tipo_resolucion VARCHAR(255)
-);
+--CREATE TABLE tipo_resolucion (
+  --  id_resolucion INT PRIMARY KEY,
+   -- tipo_resolucion VARCHAR(255)
+--);
 
 -- Crear tabla disponibilidad
 CREATE TABLE disponibilidad (
@@ -99,21 +99,21 @@ CREATE TABLE patrimonio (
 
 
 
-CREATE TABLE destinos (
-    id_destinos INT PRIMARY KEY,
-    tipo_destino VARCHAR(255),
-    plazas_destino INT
-    );
+--CREATE TABLE destinos (
+ ---   id_destinos INT PRIMARY KEY,
+   -- tipo_destino VARCHAR(255),
+   -- plazas_destino INT
+   -- );
 
-CREATE TABLE resolucion_solicitudes (
-    id_solicitud INT PRIMARY KEY,
-    anyo_solicitud INT,
-    usuarios_sol VARCHAR(255),
-    renta_sol INT,
-    primera_opcion VARCHAR(255),
-    segunda_opcion VARCHAR(255),
-    tercera_opcion VARCHAR(255)
-);
+--CREATE TABLE resolucion_solicitudes (
+ --   id_solicitud INT PRIMARY KEY,
+  --  anyo_solicitud INT,
+  --  usuarios_sol VARCHAR(255),
+   -- renta_sol INT,
+   -- primera_opcion VARCHAR(255),
+   -- segunda_opcion VARCHAR(255),
+--    tercera_opcion VARCHAR(255)
+--);
 
 -- Crear tabla solicitudes
 CREATE TABLE solicitudes (
