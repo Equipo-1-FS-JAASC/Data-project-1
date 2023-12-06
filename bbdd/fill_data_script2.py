@@ -1,3 +1,8 @@
+print ('------------------------------------------------')
+print ('Paso 1')
+print ('------------------------------------------------ \n')
+
+
 import pandas as pd
 from faker import Faker
 import random
@@ -60,6 +65,7 @@ df_usuarios = df
 df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 filas_a_actualizar = df_usuarios[df_usuarios['conteo'] > 2]
 df_usuarios = df_usuarios.drop('conteo', axis=1)
+print(f" Número de id_solicitudes únicos en la tabla usuarios: {df_usuarios['id_solicitud'].nunique()} \n")
 
 
 #Coonexion a BBDD............................................................................
@@ -91,7 +97,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla usuarios.")
+    print("Datos insertados correctamente en la tabla usuarios. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -145,7 +151,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla renta.")
+    print("Datos insertados correctamente en la tabla renta. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -198,7 +204,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla discapacidad.")
+    print("Datos insertados correctamente en la tabla discapacidad. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -254,7 +260,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla patrimonio.")
+    print("Datos insertados correctamente en la tabla patrimonio. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -304,7 +310,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla familia numerosa.")
+    print("Datos insertados correctamente en la tabla familia numerosa. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -361,7 +367,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla historial usuarios.")
+    print("Datos insertados correctamente en la tabla historial usuarios. \n ")
 
 except Exception as e:
     print ("------------------------------")
@@ -423,7 +429,7 @@ try:
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla disponibilidad.")
+    print("Datos insertados correctamente en la tabla disponibilidad. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -468,6 +474,13 @@ df_solicitudes = pd.concat([df_solicitud, solicitudes], axis=1)
 df_solicitudes
 
 
+
+
+###################################################################################################
+############################### Campos calculados #################################################
+###################################################################################################
+
+
 # para la columna usuarios solicitud necesitamos calcular cuantos usuarios tienen esa solicitud
 df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 df_usuarios_merge1 = df_usuarios[['id_solicitud','conteo']]
@@ -500,12 +513,57 @@ df_renta_merge_usuarios_patrimonio = df_renta_merge_usuarios_patrimonio.drop_dup
 df_solicitudes_final_3 = pd.merge(df_solicitudes_final_2, df_renta_merge_usuarios_patrimonio, on='id_solicitud', how='left')
 df_solicitudes_final_3['patrimonio_sol'] = df_solicitudes_final_3['patrimonio_solicitud']
 df_solicitudes_final_3= df_solicitudes_final_3.drop('patrimonio_solicitud', axis=1)
-print(df_solicitudes_final_3['id_solicitud'].nunique())
 df_solicitudes_final_3
 
 
 
 
+############ 1 viaje #########
+
+
+df1=df_solicitudes_final_3[['id_solicitud']]
+df2= df_disponibilidad[['id_hotel',	'fecha_disponibilidad_hab']]
+df2  = df2.dropna()
+df2 = df2.reset_index(drop=True)
+df2 = df2.sort_index()
+num=len(df_solicitudes_final_3)
+df2.head(num)
+df_add= pd.concat([df1, df2], axis=1)
+
+
+df_solicitudes_final_4= pd.merge(df_solicitudes_final_3, df_add, on='id_solicitud', how='left')
+df_solicitudes_final_4= df_solicitudes_final_4.rename(columns={'id_hotel': 'primera_opcion', 'fecha_disponibilidad_hab': 'fecha_1op'})
+df_solicitudes_final_4
+
+
+############ 2 viaje #########
+df2  = df2.dropna()
+df2 = df2.sort_values(by='fecha_disponibilidad_hab')
+df2 = df2.reset_index(drop=True)
+df2 = df2.sort_index()
+df2.head(num)
+df_add2= pd.concat([df1, df2], axis=1)
+df_add2.head(num)
+
+df_solicitudes_final_5= pd.merge(df_solicitudes_final_4, df_add2, on='id_solicitud', how='left')
+df_solicitudes_final_5= df_solicitudes_final_5.rename(columns={'id_hotel': 'segunda_opcion', 'fecha_disponibilidad_hab': 'fecha_2op'})
+df_solicitudes_final_5
+
+
+############ 3 viaje #########
+
+df2  = df2.dropna()
+df2 = df2.sample(frac=1).reset_index(drop=True)
+df2 = df2.reset_index(drop=True)
+df2 = df2.sort_index()
+df2.head(num)
+df_add3= pd.concat([df1, df2], axis=1)
+df_add3.head(num)
+
+df_solicitudes_final_6 = pd.merge(df_solicitudes_final_5, df_add3, on='id_solicitud', how='left')
+df_solicitudes_final_6 = df_solicitudes_final_6.rename(columns={'id_hotel': 'tercera_opcion', 'fecha_disponibilidad_hab': 'fecha_3op'})
+df_solicitudes_final_6
+print(f" Número de id_solicitudes únicos en la tabla solicitudes: {df_solicitudes_final_6['id_solicitud'].nunique()} \n")
 
 ###################################################################################################################
 
@@ -518,21 +576,21 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO solicitudes ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final_3.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final_3.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_solicitudes_final_6.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_solicitudes_final_6.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_solicitudes_final_3.iterrows():
+    for _, row in df_solicitudes_final_6.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
     conn.commit()
 
-    print("Datos insertados correctamente en la tabla solicitudes.")
+    print("Datos insertados correctamente en la tabla solicitudes. \n")
 
 except Exception as e:
     print ("------------------------------")
@@ -552,11 +610,11 @@ finally:
 
 print ('------------------------------------------------')
 print ('Se han insertado todas las tablas correctamente')
-print ('------------------------------------------------')
+print ('------------------------------------------------ \n')
 
 
 
 
 print ('------------------------------------------------')
 print ('Paso 2')
-print ('------------------------------------------------')
+print ('------------------------------------------------ \n')
