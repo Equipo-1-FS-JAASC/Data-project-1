@@ -13,7 +13,7 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  python_bbdd212rt553:
+  python_bbt553:
     container_name: python
     build:
       context: .

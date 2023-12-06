@@ -503,21 +503,7 @@ df_solicitudes_final_3= df_solicitudes_final_3.drop('patrimonio_solicitud', axis
 print(df_solicitudes_final_3['id_solicitud'].nunique())
 df_solicitudes_final_3
 
-#Añadimos a la tabla solictudes los viajes, tenemos en ceunta la tabla de disponibilidad para que coincida
-#df_disponibilidad_col = df_disponibilidad[['id_hotel',	'fecha_disponibilidad_hab']]
-#df_solicitudes1 = pd.concat([df_solicitudes_final_3, df_disponibilidad_col], axis=1)
-#df_solicitudes1.rename(columns={'id_hotel': 'primera_opcion','fecha_disponibilidad_hab': 'fecha_1op'}, inplace=True)
-#df_solicitudes1
 
-#df_desordenado = df_disponibilidad_col.sample(frac=1).reset_index(drop=True)
-#df_solicitudes2 = pd.concat([df_solicitudes1, df_desordenado], axis=1)
-#df_solicitudes2.rename(columns={'id_hotel': 'segunda_opcion','fecha_disponibilidad_hab': 'fecha_2op'}, inplace=True)
-#df_solicitudes2
-
-#df_desordenado2 = df_disponibilidad_col.sample(frac=1).reset_index(drop=True)
-#df_solicitudes_final = pd.concat([df_solicitudes2, df_desordenado2], axis=1)
-#df_solicitudes_final.rename(columns={'id_hotel': 'tercera_opcion','fecha_disponibilidad_hab': 'fecha_3op'}, inplace=True)
-#df_solicitudes_final
 
 
 
