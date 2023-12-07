@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres 
+      - postgres
   
   #jupyter:
    # container_name: jupyter_notebookd

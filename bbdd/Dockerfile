@@ -12,12 +12,9 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar el script de llenado de datos
+# Copiar los scripts
 COPY fill_data_script2.py .
-COPY data_quality.py .
-
+COPY scoring.py .
 
 # Establecer el comando predeterminado
-CMD ["python", "fill_data_script2.py"]
-#CMD ["python", "fill_data_script2.py", "data_quality.py", "&&", "python", "data_quality.py"]
-#CMD ["python", "data_quality.py"]
+CMD ["bash", "-c", "python fill_data_script2.py && python scoring.py"]
