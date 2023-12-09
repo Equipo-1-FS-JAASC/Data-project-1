@@ -9,6 +9,7 @@ import time
 import numpy as np
 
 
+
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
 time.sleep(10)
 
@@ -413,7 +414,7 @@ lista_ids = generar_ids_unicos(num_registros)
 
 for i in range(num_registros):
     id_hotel = lista_ids[i]
-    hotel_name = hotel_name = fake.company()
+    hotel_name = fake.company()
     localidad = fake.city()
     data_hotel.append([id_hotel, hotel_name, localidad])
 
