@@ -14,6 +14,14 @@ DROP TABLE IF EXISTS resolucion_solicitudes;
 DROP TABLE IF EXISTS solicitudes;
 
 
+-- Crear tabla hoteles
+CREATE TABLE hoteles (
+    id_hotel VARCHAR(9) PRIMARY KEY,
+    nombre VARCHAR(255),
+    localizacion VARCHAR(255)
+
+);
+
 
 -- Crear tabla usuarios
 CREATE TABLE usuarios (
@@ -65,16 +73,16 @@ CREATE TABLE scoring (
 
 -- Crear tabla tipo_resolucion
 --CREATE TABLE tipo_resolucion (
-  --  id_resolucion INT PRIMARY KEY,
-   -- tipo_resolucion VARCHAR(255)
+--  id_resolucion INT PRIMARY KEY,
+-- tipo_resolucion VARCHAR(255)
 --);
 
 -- Crear tabla disponibilidad
 CREATE TABLE disponibilidad (
+    id_plaza VARCHAR(9) PRIMARY KEY,
     id_hotel VARCHAR(255),
-    fecha_disponibilidad_hab DATE ,
-    num_hab_disp INT,
-    PRIMARY KEY (id_hotel, fecha_disponibilidad_hab)
+    fecha_disponibilidad_hab DATE,
+    num_hab_disp INT
 );
 
 -- Crear tabla discapacidad

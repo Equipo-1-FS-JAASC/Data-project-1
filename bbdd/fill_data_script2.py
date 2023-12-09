@@ -1,7 +1,3 @@
-print ('------------------------------------------------')
-print ('Paso 1')
-print ('------------------------------------------------ \n')
-
 
 import pandas as pd
 from faker import Faker
@@ -10,13 +6,18 @@ from datetime import datetime, timedelta
 import psycopg2
 from psycopg2 import sql  
 import time
-import numpy as np 
-
-
+import numpy as np
 
 
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
 time.sleep(10)
+
+
+print ('------------------------------------------------')
+print ('Paso 1')
+print ('------------------------------------------------ \n')
+
+
 
 # Configuración de Faker
 fake = Faker('es_ES')
@@ -381,32 +382,105 @@ finally:
 
 
 ##################################################################################
+############################# HOTEL ##############################################
+##################################################################################
+
+
+
+data_hotel = []
+
+def generar_ids_unicos(num_registros):
+    ids_unicos = set()
+
+    # Generar IDs únicos hasta alcanzar el número de registros especificado
+    while len(ids_unicos) < num_registros:
+        # Generar un ID único utilizando random
+        id_hotel = f"{random.randint(100000, 999999):06}"
+
+        # Verificar si el ID generado ya existe
+        if id_hotel not in ids_unicos:
+            # Agregar el ID generado al conjunto
+            ids_unicos.add(id_hotel)
+
+    # Convertir el conjunto a una lista
+    return list(ids_unicos)
+
+# setup
+num_registros = 200  # Cantidad de hoteles
+lista_ids = generar_ids_unicos(num_registros)
+
+
+
+for i in range(num_registros):
+    id_hotel = lista_ids[i]
+    hotel_name = hotel_name = fake.company()
+    localidad = fake.city()
+    data_hotel.append([id_hotel, hotel_name, localidad])
+
+# Convertir la lista a un DataFrame
+data_hotel = pd.DataFrame(data_hotel, columns=['id_hotel', 'nombre', 'localizacion'])
+
+# Crear una conexión para insertar los datos en la tabla patrimonio
+conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+
+try:
+    # Crear una consulta de inserción
+    insert_query = sql.SQL("INSERT INTO hoteles ({}) VALUES ({})").format(
+        sql.SQL(', ').join(map(sql.Identifier, data_hotel.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(data_hotel.columns))
+    )
+
+    # Obtener el cursor
+    cursor = conn.cursor()
+
+    # Insertar filas del DataFrame en la tabla de la base de datos
+    for _, row in data_hotel.iterrows():
+        cursor.execute(insert_query, tuple(row))
+
+    # Confirmar la transacción
+    conn.commit()
+
+    print("Datos insertados correctamente en la tabla hoteles. \n")
+
+except Exception as e:
+    print ("------------------------------")
+    print(f"Error: {e} hoteles")
+
+finally:
+    # Cerrar la conexión
+    if conn is not None:
+        conn.close()
+
+
+
+##################################################################################
 ############################# DISPONIBILIDAD #####################################
 ##################################################################################
 
 data_disponibilidad = []
 start_date = datetime(2024, 1, 1)
+lista_ids_2 = generar_ids_unicos(10000)
 
 #
 for _ in range(2000):
-    ciudades = fake.city()
-    fecha = datetime(2024, random.randint(1,12), random.randint(1,29))
-    num_hab_disp = random.randint(1,10)
+    id_hotel = random.choice(data_hotel['id_hotel']) #saca los hoteles de la lista de hoteles de la tabla hoteles
+    fecha = datetime(2024, random.randint(1,12), random.randint(1,29)) 
+    num_hab_disp = 1 #DEBE SER SIEMPRE 1
+    id_plaza = lista_ids_2.pop() #id aleatoreo
 
-    data_disponibilidad.append([ciudades,fecha, num_hab_disp])
+    data_disponibilidad.append([id_plaza,id_hotel,fecha, num_hab_disp])
 
-df_disponibilidad = pd.DataFrame(data_disponibilidad, columns=['id_hotel','fecha_disponibilidad_hab','num_hab_disp'])
 
-# Contar cuántas filas tienen los mismos valores en id_hotel y fecha_disponibilidad_hab
-conteo_filas = df_disponibilidad.groupby(['id_hotel', 'fecha_disponibilidad_hab']).size().reset_index(name='conteo')
-# Fusionar el DataFrame original con el DataFrame de conteo
-df_disponibilidad_con_conteo = pd.merge(df_disponibilidad, conteo_filas, on=['id_hotel', 'fecha_disponibilidad_hab'], how='left')
-df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo']>1].sort_values(by='id_hotel')
-#filtramos
-df_disponibilidad = df_disponibilidad_con_conteo[df_disponibilidad_con_conteo['conteo'] <= 1].sort_values(by='id_hotel')
-df_disponibilidad.drop(columns='conteo', inplace=True)
-df_disponibilidad
 
+df_disponibilidad_1 = pd.DataFrame(data_disponibilidad, columns=['id_plaza', 'id_hotel','fecha_disponibilidad_hab','num_hab_disp'])
+
+# Obtener la localidad correspondiente a cada hotel
+localidades_por_id = {row['id_hotel']: row['localizacion'] for _, row in data_hotel.iterrows()}
+
+# Agrega la columna de localidad a la tabla de disponibilidad
+
+df_disponibilidad = df_disponibilidad_1.copy()
+df_disponibilidad['localidad'] = df_disponibilidad['id_hotel'].map(localidades_por_id)
 
 
 # Crear una conexión para insertar los datos en la tabla patrimonio
@@ -415,15 +489,15 @@ conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, 
 try:
     # Crear una consulta de inserción
     insert_query = sql.SQL("INSERT INTO disponibilidad ({}) VALUES ({})").format(
-        sql.SQL(', ').join(map(sql.Identifier, df_disponibilidad.columns)),
-        sql.SQL(', ').join(sql.Placeholder() * len(df_disponibilidad.columns))
+        sql.SQL(', ').join(map(sql.Identifier, df_disponibilidad_1.columns)),
+        sql.SQL(', ').join(sql.Placeholder() * len(df_disponibilidad_1.columns))
     )
 
     # Obtener el cursor
     cursor = conn.cursor()
 
     # Insertar filas del DataFrame en la tabla de la base de datos
-    for _, row in df_disponibilidad.iterrows():
+    for _, row in df_disponibilidad_1.iterrows():
         cursor.execute(insert_query, tuple(row))
 
     # Confirmar la transacción
@@ -522,7 +596,7 @@ df_solicitudes_final_3
 
 
 df1=df_solicitudes_final_3[['id_solicitud']]
-df2= df_disponibilidad[['id_hotel',	'fecha_disponibilidad_hab']]
+df2= df_disponibilidad[['localidad','fecha_disponibilidad_hab']]
 df2  = df2.dropna()
 df2 = df2.reset_index(drop=True)
 df2 = df2.sort_index()
@@ -532,7 +606,7 @@ df_add= pd.concat([df1, df2], axis=1)
 
 
 df_solicitudes_final_4= pd.merge(df_solicitudes_final_3, df_add, on='id_solicitud', how='left')
-df_solicitudes_final_4= df_solicitudes_final_4.rename(columns={'id_hotel': 'primera_opcion', 'fecha_disponibilidad_hab': 'fecha_1op'})
+df_solicitudes_final_4= df_solicitudes_final_4.rename(columns={'localidad': 'primera_opcion', 'fecha_disponibilidad_hab': 'fecha_1op'})
 df_solicitudes_final_4
 
 
@@ -546,7 +620,7 @@ df_add2= pd.concat([df1, df2], axis=1)
 df_add2.head(num)
 
 df_solicitudes_final_5= pd.merge(df_solicitudes_final_4, df_add2, on='id_solicitud', how='left')
-df_solicitudes_final_5= df_solicitudes_final_5.rename(columns={'id_hotel': 'segunda_opcion', 'fecha_disponibilidad_hab': 'fecha_2op'})
+df_solicitudes_final_5= df_solicitudes_final_5.rename(columns={'localidad': 'segunda_opcion', 'fecha_disponibilidad_hab': 'fecha_2op'})
 df_solicitudes_final_5
 
 
@@ -561,7 +635,7 @@ df_add3= pd.concat([df1, df2], axis=1)
 df_add3.head(num)
 
 df_solicitudes_final_6 = pd.merge(df_solicitudes_final_5, df_add3, on='id_solicitud', how='left')
-df_solicitudes_final_6 = df_solicitudes_final_6.rename(columns={'id_hotel': 'tercera_opcion', 'fecha_disponibilidad_hab': 'fecha_3op'})
+df_solicitudes_final_6 = df_solicitudes_final_6.rename(columns={'localidad': 'tercera_opcion', 'fecha_disponibilidad_hab': 'fecha_3op'})
 df_solicitudes_final_6
 print(f" Número de id_solicitudes únicos en la tabla solicitudes: {df_solicitudes_final_6['id_solicitud'].nunique()} \n")
 
