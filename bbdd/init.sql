@@ -57,6 +57,7 @@ CREATE TABLE renta (
 -- Crear tabla scoring
 CREATE TABLE scoring (
     id_solicitud INT PRIMARY KEY,
+    id_plaza VARCHAR(9), 
     index_ INT,
     score FLOAT,
     edad_score FLOAT,

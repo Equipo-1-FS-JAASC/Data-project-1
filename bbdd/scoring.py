@@ -3,7 +3,7 @@
 
 # ### >>>INGESTA DE DATOS
 
-# In[161]:
+# In[134]:
 
 
 import psycopg2
@@ -58,11 +58,15 @@ try:
                             JOIN patrimonio AS p ON u.dni = p.dni
                             JOIN historial_usuarios AS h ON u.dni = h.dni;
                             """
-        query_concatenar_2 = """SELECT 
-                                u.dni, u.id_solicitud, s.*
-                                FROM usuarios u
-                                LEFT JOIN solicitudes s ON u.id_solicitud = s.id_solicitud;
+        query_concatenar_2 = """
+                            SELECT 
+                                u.dni, 
+                                u.id_solicitud, 
+                                s.*
+                            FROM usuarios u
+                            LEFT JOIN solicitudes s ON u.id_solicitud = s.id_solicitud;
                                 """
+                                
 
 
         # Crear un DataFrame con los resultados de la consulta concatenada
@@ -87,7 +91,7 @@ renta_weight = 0.1
 
 # ### >>>EDAD.SCORE
 
-# In[164]:
+# In[137]:
 
 
 def puntaje_edad_nueva(edad):
@@ -127,7 +131,7 @@ df_edad = procesar_edad(df)
 
 # ### >>>DISCAPACIDAD.SCORE
 
-# In[167]:
+# In[140]:
 
 
 def puntaje_discapacidad(grado_dis):
@@ -165,7 +169,7 @@ df_discapacidad
 
 # ### >>>SCORE FAMILIA NUMEROSA
 
-# In[170]:
+# In[143]:
 
 
 def puntaje_familia(tipo_fam_num):
@@ -203,7 +207,7 @@ df_familia
 
 # ### >>>COCHE - ARRENDADOR - OFICIO ESPECIAL
 
-# In[173]:
+# In[146]:
 
 
 def puntaje_coche_arrendador(coche_arrendador_oficio):
@@ -243,7 +247,7 @@ df_coche_arrendador_oficio = procesar_coche_arrendador_oficio(df)
 
 # ### >>>PARTICIPACION PREVIA
 
-# In[176]:
+# In[149]:
 
 
 def participacion_previa(resultado_t_1, suma_viajes_t_1y_t_2, viajes_t_1, viajes_t_2):
@@ -305,7 +309,7 @@ df_participacion_previa = procesar_participacion_previa(df)
 
 # ### >>>PATRIMONIO
 
-# In[180]:
+# In[153]:
 
 
 def calcular_puntaje_patrimonio(patrimonio_sol):
@@ -357,7 +361,7 @@ df_patrimonio = procesar_patrimonio(df)
 
 # ### >>>RENTA
 
-# In[183]:
+# In[156]:
 
 
 def calcular_puntaje_renta(renta_sol, usuarios_sol):
@@ -412,7 +416,7 @@ df_renta = procesar_renta(df)
 
 # ### >>>MERGE 
 
-# In[186]:
+# In[159]:
 
 
 #Merge de dataframes
@@ -483,7 +487,7 @@ score_merged_weighted_group_sorted['index_'] = score_merged_weighted_group_sorte
 
 # ### >>>SUBIR TABLA SCORE
 
-# In[190]:
+# In[163]:
 
 
 # Intentar establecer la conexión
@@ -515,4 +519,168 @@ except psycopg2.Error as e:
     print(f"Error al insertar o borrar datos en la tabla scoring: {e}")
 
 
+# ### >>> ASIGNACION DE PLAZAS
+
+# In[164]:
+
+
+#Temporizador
+time.sleep(5)
+
+# Crear la cadena de conexión
+connection_string = f"dbname={dbname} user={user} password={password} host={host} port={port}"
+
+# Intentar establecer la conexión
+try:
+    with psycopg2.connect(connection_string) as connection:
+        # Consulta para concatenar las tablas                        
+        query_concatenar_3 = """
+            SELECT 
+                s.id_solicitud,
+                sc.index_,
+                sc.score, 
+                s.primera_opcion,
+                s.fecha_1op,
+                s.segunda_opcion, 
+                s.fecha_2op,
+                s.tercera_opcion,
+                s.fecha_3op
+            FROM 
+                solicitudes s
+            JOIN scoring sc ON s.id_solicitud = sc.id_solicitud;
+        """
+
+        query_concatenar_5 = """
+            SELECT 
+                d.id_hotel,
+                d.fecha_disponibilidad_hab,
+                d.num_hab_disp,
+                d.id_plaza,
+                ho.localizacion
+            FROM disponibilidad d
+            JOIN hoteles ho ON d.id_hotel = ho.id_hotel;
+        """
+
+        # Crear DataFrames con los resultados de las consultas
+        solicitudes = pd.read_sql_query(query_concatenar_3, connection)
+        disponibilidad = pd.read_sql_query(query_concatenar_5, connection)
+
+except psycopg2.Error as e:
+    print("Error durante la conexión a la base de datos:", e)
+finally:
+    if connection:
+        connection.close()
+
+
+# In[165]:
+
+
+#FUNCION DE ASIGNACION
+# Función para encontrar una coincidencia entre las preferencias y la disponibilidad
+def encontrar_coincidencia(preferencia, fecha_preferencia, disponibilidad, plazas_asignadas):
+    filtro = (disponibilidad['fecha_disponibilidad_hab'] == fecha_preferencia) & \
+             (disponibilidad['localizacion'] == preferencia)
+    coincidencias = disponibilidad[filtro]
+    
+    # Filtrar solo las plazas que aún no han sido asignadas
+    coincidencias = coincidencias[~coincidencias['id_plaza'].isin(plazas_asignadas)]
+    
+    if not coincidencias.empty:
+        id_plaza_asignada = coincidencias.iloc[0]['id_plaza']
+        
+        # Marcar la plaza como asignada en el DataFrame de disponibilidad
+        disponibilidad.loc[disponibilidad['id_plaza'] == id_plaza_asignada, 'asignada'] = True
+        
+        return id_plaza_asignada
+    else:
+        return None
+
+# Agregar columna 'asignada' en disponibilidad e inicializarla como False
+disponibilidad['asignada'] = False
+
+# Aplicar la función para asignar id_plaza a cada id_solicitud respetando el orden de index_
+solicitudes['id_plaza'] = None  # Inicializar la columna
+plazas_asignadas = set()  # Conjunto para rastrear plazas ya asignadas
+
+for idx, row in solicitudes.iterrows():
+    id_solicitud = row['id_solicitud']
+    id_plaza_asignada = encontrar_coincidencia(row['primera_opcion'], row['fecha_1op'], disponibilidad, plazas_asignadas) or \
+                        encontrar_coincidencia(row['segunda_opcion'], row['fecha_2op'], disponibilidad, plazas_asignadas) or \
+                        encontrar_coincidencia(row['tercera_opcion'], row['fecha_3op'], disponibilidad, plazas_asignadas)
+
+    # Verificar si la plaza ya está asignada o supera la cantidad máxima
+    if id_plaza_asignada is not None:
+        solicitudes.at[idx, 'id_plaza_asignada'] = id_plaza_asignada
+        plazas_asignadas.add(id_plaza_asignada)
+
+#Mensaje de plazas asignadas
+plazas_asignadas = disponibilidad['asignada'].sum()
+plazas_no_asignadas = disponibilidad.shape[0] - plazas_asignadas
+
+#Preparecion de las id_plaza para subir a tabla scoring
+df_id_plaza = solicitudes[['id_solicitud', 'id_plaza_asignada']]
+df_id_plaza = df_id_plaza.rename(columns={'id_plaza_asignada': 'id_plaza'})
+
+
+print(f'Plazas asignadas: {plazas_asignadas}')
+print(f'Plazas no asignadas: {plazas_no_asignadas}')
+
+
+
+# In[166]:
+
+
+# Subir asignacion de plaza a tabla score
+# Intentar establecer la conexión
+try:
+    with psycopg2.connect(connection_string) as connection:
+        # Obtener el cursor
+        cursor = connection.cursor()
+
+        # Actualizar la columna 'id_plaza'
+        for _, row in df_id_plaza.iterrows():
+            update_query = sql.SQL("UPDATE scoring SET id_plaza = {} WHERE id_solicitud = {}").format(
+                sql.Placeholder(), sql.Placeholder()
+            )
+            cursor.execute(update_query, (row['id_plaza'], row['id_solicitud']))
+
+        # Confirmar la transacción
+        connection.commit()
+
+        print("Datos de 'id_plaza' actualizados correctamente en la tabla scoring.")
+
+except psycopg2.Error as e:
+    print(f"Error al actualizar datos en la columna 'id_plaza' de la tabla scoring: {e}")
+
+
 # ### >>>ACTUALIZAR scoring.py
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
