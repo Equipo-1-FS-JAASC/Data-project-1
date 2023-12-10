@@ -595,13 +595,14 @@ def encontrar_coincidencia(preferencia, fecha_preferencia, disponibilidad, plaza
     else:
         return None
 
-# Agregar columna 'asignada' en disponibilidad e inicializarla como False
-disponibilidad['asignada'] = False
 
-# Aplicar la función para asignar id_plaza a cada id_solicitud respetando el orden de index_
+disponibilidad['asignada'] = False # Agregar columna 'asignada' en disponibilidad y se inicializa como False
 solicitudes['id_plaza'] = None  # Inicializar la columna
-plazas_asignadas = set()  # Conjunto para rastrear plazas ya asignadas
+solicitudes = solicitudes.sort_values(by='index_') # Ordena df por index 
+plazas_asignadas = set()  # Lista para rastrear plazas ya asignadas
 
+
+#Itera en cada fila aplicando la funcion y respetando el orden del indice
 for idx, row in solicitudes.iterrows():
     id_solicitud = row['id_solicitud']
     id_plaza_asignada = encontrar_coincidencia(row['primera_opcion'], row['fecha_1op'], disponibilidad, plazas_asignadas) or \

@@ -80,10 +80,11 @@ CREATE TABLE scoring (
 
 -- Crear tabla disponibilidad
 CREATE TABLE disponibilidad (
-    id_plaza VARCHAR(9) PRIMARY KEY,
+    id_plaza VARCHAR(9),
     id_hotel VARCHAR(255),
     fecha_disponibilidad_hab DATE,
-    num_hab_disp INT
+    num_hab_disp INT,
+    PRIMARY KEY (id_plaza)
 );
 
 -- Crear tabla discapacidad
