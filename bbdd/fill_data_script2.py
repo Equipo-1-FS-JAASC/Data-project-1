@@ -11,7 +11,7 @@ import numpy as np
 
 
 # Retrasa la ejecucion del script 10 segundos, dando tiempo a que se levante la BBDD (no borrar!)
-time.sleep(10)
+time.sleep(15)
 
 
 print ('------------------------------------------------')

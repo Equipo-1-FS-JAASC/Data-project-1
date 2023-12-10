@@ -12,7 +12,7 @@ import pandas as pd
 import time
 
 #Delay de 15 segundos
-time.sleep(15)
+time.sleep(20)
 
 # Credenciales de la base de datos
 dbname = "DBInmerso"
