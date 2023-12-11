@@ -390,6 +390,7 @@ finally:
 
 data_hotel = []
 
+#Funcion para generar ID de usuarios unicos
 def generar_ids_unicos(num_registros):
     ids_unicos = set()
 
@@ -406,15 +407,37 @@ def generar_ids_unicos(num_registros):
     # Convertir el conjunto a una lista
     return list(ids_unicos)
 
+
+
+def generar_nombres_hoteles(cantidad):
+    # Lista de posibles palabras para nombres de hoteles
+    palabras = ["Sol", "Luna", "Estrella", "Mar", "Montaña", "Oasis", "Playa", "Cielo", "Trópico", "Elegante", "Palacio", "Royal", "Gourmet", "Aventura", "Paraíso", "Fiesta", "Vista", "Exclusivo", "Serenidad", "Brillante", "Costa", "Rincón", "Ibérico", "Andaluz", "Mediterráneo", "Encanto", "Soleado", "Maravilla", "Resplandor", "Sinfonía", "Zen", "Majestuoso", "Primavera", "Aurora", "Radiante", "Centelleante", "Horizonte", "Inn", "Encantado", "Green", "Palace", "Resort", "Arcadia", "Galicia", "Posada", "Costa del Sol"]
+
+    #Sufijos
+    sufijos = ["Hotel", "Palace", "Resort"]
+
+    # Lista para almacenar los nombres generados
+    nombres_hoteles = []
+
+    # Generar nombres de hotel únicos
+    while len(nombres_hoteles) < cantidad:
+        nombre = f"{random.choice(palabras)} {random.choice(palabras)} {random.choice(sufijos)}"
+        if nombre not in nombres_hoteles:
+            nombres_hoteles.append(nombre)
+
+    return nombres_hoteles
+
 # setup
 num_registros = 200  # Cantidad de hoteles
-lista_ids = generar_ids_unicos(num_registros)
 
+#Aplicar funciones random ID y nombre_hotel
+lista_ids = generar_ids_unicos(num_registros) 
+nombres_hoteles_generados = generar_nombres_hoteles(num_registros) 
 
 
 for i in range(num_registros):
     id_hotel = lista_ids[i]
-    hotel_name = fake.company()
+    hotel_name = nombres_hoteles_generados[i]
     localidad = fake.city()
     data_hotel.append([id_hotel, hotel_name, localidad])
 
