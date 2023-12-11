@@ -515,7 +515,7 @@ df_disponibilidad = df_disponibilidad_1.copy()
 df_disponibilidad['localidad'] = df_disponibilidad['id_hotel'].map(localidades_por_id)
 
 
-# Crear una conexión para insertar los datos en la tabla patrimonio
+# Crear una conexión para insertar los datos en la tabla 
 conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
 
 try:
