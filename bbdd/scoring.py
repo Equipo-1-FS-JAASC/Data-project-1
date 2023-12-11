@@ -3,7 +3,7 @@
 
 # ### >>>INGESTA DE DATOS
 
-# In[134]:
+# In[1]:
 
 
 import psycopg2
@@ -77,21 +77,31 @@ except psycopg2.Error as e:
     print(f"Error al conectar a la base de datos: {e}")
 
 #>>>>>Ponderaciones<<<<<<#
-edad_weight = 0.1
-discapacidad_weight = 0.1
-familia_weight = 0.1
-renta_wheigt = 0.1
-coche_wight = 0.1
-oficio_especial_wight = 0.1
-arrendador_wight = 0.1
-participacion_previa_weight = 0.1
-patrimonio_weight = 0.1
-renta_weight = 0.1
+
+edad_weight = 0.2
+discapacidad_weight = 0.05
+renta_wheigt = 0.2
+patrimonio_weight = 0.15
+familia_weight = 0.05
+arrendador_wight = 0.10
+participacion_previa_weight = 0.15
+coche_wight = 0.05
+oficio_especial_wight = 0.05
+
+#modificar las ponderaciones, no debe ponderar todo igual
+
+
+# In[2]:
+
+
+# Autorechazos 
+
+df
 
 
 # ### >>>EDAD.SCORE
 
-# In[137]:
+# In[5]:
 
 
 def puntaje_edad_nueva(edad):
@@ -131,7 +141,7 @@ df_edad = procesar_edad(df)
 
 # ### >>>DISCAPACIDAD.SCORE
 
-# In[140]:
+# In[8]:
 
 
 def puntaje_discapacidad(grado_dis):
@@ -169,7 +179,7 @@ df_discapacidad
 
 # ### >>>SCORE FAMILIA NUMEROSA
 
-# In[143]:
+# In[11]:
 
 
 def puntaje_familia(tipo_fam_num):
@@ -207,7 +217,7 @@ df_familia
 
 # ### >>>COCHE - ARRENDADOR - OFICIO ESPECIAL
 
-# In[146]:
+# In[14]:
 
 
 def puntaje_coche_arrendador(coche_arrendador_oficio):
@@ -247,7 +257,7 @@ df_coche_arrendador_oficio = procesar_coche_arrendador_oficio(df)
 
 # ### >>>PARTICIPACION PREVIA
 
-# In[149]:
+# In[17]:
 
 
 def participacion_previa(resultado_t_1, suma_viajes_t_1y_t_2, viajes_t_1, viajes_t_2):
@@ -309,7 +319,7 @@ df_participacion_previa = procesar_participacion_previa(df)
 
 # ### >>>PATRIMONIO
 
-# In[153]:
+# In[21]:
 
 
 def calcular_puntaje_patrimonio(patrimonio_sol):
@@ -361,7 +371,7 @@ df_patrimonio = procesar_patrimonio(df)
 
 # ### >>>RENTA
 
-# In[156]:
+# In[24]:
 
 
 def calcular_puntaje_renta(renta_sol, usuarios_sol):
@@ -416,7 +426,7 @@ df_renta = procesar_renta(df)
 
 # ### >>>MERGE 
 
-# In[159]:
+# In[27]:
 
 
 #Merge de dataframes
@@ -487,7 +497,7 @@ score_merged_weighted_group_sorted['index_'] = score_merged_weighted_group_sorte
 
 # ### >>>SUBIR TABLA SCORE
 
-# In[163]:
+# In[31]:
 
 
 # Intentar establecer la conexión
@@ -513,7 +523,7 @@ try:
         # Confirmar la transacción
         connection.commit()
 
-        print("\nDatos insertados correctamente en la tabla scoring. \n")
+        print("Datos insertados correctamente en la tabla scoring.")
 
 except psycopg2.Error as e:
     print(f"Error al insertar o borrar datos en la tabla scoring: {e}")
@@ -521,7 +531,7 @@ except psycopg2.Error as e:
 
 # ### >>> ASIGNACION DE PLAZAS
 
-# In[164]:
+# In[32]:
 
 
 #Temporizador
@@ -572,7 +582,7 @@ finally:
         connection.close()
 
 
-# In[165]:
+# In[33]:
 
 
 #FUNCION DE ASIGNACION
@@ -623,12 +633,12 @@ df_id_plaza = solicitudes[['id_solicitud', 'id_plaza_asignada']]
 df_id_plaza = df_id_plaza.rename(columns={'id_plaza_asignada': 'id_plaza'})
 
 
-print(f'Plazas asignadas: {plazas_asignadas}\n')
-print(f'Plazas no asignadas: {plazas_no_asignadas}\n')
+print(f'Plazas asignadas: {plazas_asignadas}')
+print(f'Plazas no asignadas: {plazas_no_asignadas}')
 
 
 
-# In[166]:
+# In[34]:
 
 
 # Subir asignacion de plaza a tabla score
@@ -648,37 +658,13 @@ try:
         # Confirmar la transacción
         connection.commit()
 
-        print("Datos de 'id_plaza' actualizados correctamente en la tabla scoring.\n")
+        print("Datos de 'id_plaza' actualizados correctamente en la tabla scoring.")
 
 except psycopg2.Error as e:
     print(f"Error al actualizar datos en la columna 'id_plaza' de la tabla scoring: {e}")
 
 
 # ### >>>ACTUALIZAR scoring.py
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
 
 # In[ ]:
 
