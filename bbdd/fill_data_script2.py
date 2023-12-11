@@ -411,7 +411,15 @@ def generar_ids_unicos(num_registros):
 
 def generar_nombres_hoteles(cantidad):
     # Lista de posibles palabras para nombres de hoteles
-    palabras = ["Sol", "Luna", "Estrella", "Mar", "Montaña", "Oasis", "Playa", "Cielo", "Trópico", "Elegante", "Palacio", "Royal", "Gourmet", "Aventura", "Paraíso", "Fiesta", "Vista", "Exclusivo", "Serenidad", "Brillante", "Costa", "Rincón", "Ibérico", "Andaluz", "Mediterráneo", "Encanto", "Soleado", "Maravilla", "Resplandor", "Sinfonía", "Zen", "Majestuoso", "Primavera", "Aurora", "Radiante", "Centelleante", "Horizonte", "Inn", "Encantado", "Green", "Palace", "Resort", "Arcadia", "Galicia", "Posada", "Costa del Sol"]
+    palabras = ["Sol", "Luna", "Estrella", "Mar", "Montaña", 
+                "Oasis", "Playa", "Cielo", "Trópico", "Elegante", 
+                "Palacio", "Royal", "Gourmet", "Aventura", "Paraíso", 
+                "Fiesta", "Vista", "Exclusivo", "Serenidad", "Brillante", 
+                "Costa", "Rincón", "Ibérico", "Andaluz", "Mediterráneo", 
+                "Encanto", "Soleado", "Maravilla", "Resplandor", "Sinfonía", 
+                "Zen", "Majestuoso", "Primavera", "Aurora", "Radiante", "Western", 
+                "Horizonte", "Inn", "Encantado", "Green", "Chill", "Imperial", "Arcadia", 
+                "Galicia", "Posada", "Costa del Sol"]
 
     #Sufijos
     sufijos = ["Hotel", "Palace", "Resort"]
