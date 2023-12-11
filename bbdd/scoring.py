@@ -513,7 +513,7 @@ try:
         # Confirmar la transacción
         connection.commit()
 
-        print("Datos insertados correctamente en la tabla scoring.")
+        print("\nDatos insertados correctamente en la tabla scoring. \n")
 
 except psycopg2.Error as e:
     print(f"Error al insertar o borrar datos en la tabla scoring: {e}")
@@ -623,8 +623,8 @@ df_id_plaza = solicitudes[['id_solicitud', 'id_plaza_asignada']]
 df_id_plaza = df_id_plaza.rename(columns={'id_plaza_asignada': 'id_plaza'})
 
 
-print(f'Plazas asignadas: {plazas_asignadas}')
-print(f'Plazas no asignadas: {plazas_no_asignadas}')
+print(f'Plazas asignadas: {plazas_asignadas}\n')
+print(f'Plazas no asignadas: {plazas_no_asignadas}\n')
 
 
 
@@ -648,7 +648,7 @@ try:
         # Confirmar la transacción
         connection.commit()
 
-        print("Datos de 'id_plaza' actualizados correctamente en la tabla scoring.")
+        print("Datos de 'id_plaza' actualizados correctamente en la tabla scoring.\n")
 
 except psycopg2.Error as e:
     print(f"Error al actualizar datos en la columna 'id_plaza' de la tabla scoring: {e}")

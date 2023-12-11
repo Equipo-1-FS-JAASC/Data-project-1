@@ -67,7 +67,7 @@ df_usuarios = df
 df_usuarios['conteo'] = df_usuarios.groupby('id_solicitud')['id_solicitud'].transform('count')
 filas_a_actualizar = df_usuarios[df_usuarios['conteo'] > 2]
 df_usuarios = df_usuarios.drop('conteo', axis=1)
-print(f" Número de id_solicitudes únicos en la tabla usuarios: {df_usuarios['id_solicitud'].nunique()} \n")
+print(f"Número de id_solicitudes únicos en la tabla usuarios: {df_usuarios['id_solicitud'].nunique()} \n")
 
 
 #Coonexion a BBDD............................................................................
@@ -669,7 +669,8 @@ df_add3.head(num)
 df_solicitudes_final_6 = pd.merge(df_solicitudes_final_5, df_add3, on='id_solicitud', how='left')
 df_solicitudes_final_6 = df_solicitudes_final_6.rename(columns={'localidad': 'tercera_opcion', 'fecha_disponibilidad_hab': 'fecha_3op'})
 df_solicitudes_final_6
-print(f" Número de id_solicitudes únicos en la tabla solicitudes: {df_solicitudes_final_6['id_solicitud'].nunique()} \n")
+
+print(f"Número de id_solicitudes únicos en la tabla solicitudes: {df_solicitudes_final_6['id_solicitud'].nunique()} \n")
 
 ###################################################################################################################
 
@@ -715,7 +716,7 @@ finally:
 
 
 print ('------------------------------------------------')
-print ('Se han insertado todas las tablas correctamente')
+print ('Se han insertado datos en todas las tablas correctamente')
 print ('------------------------------------------------ \n')
 
 
