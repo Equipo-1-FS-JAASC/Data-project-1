@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS hoteles;
 DROP TABLE IF EXISTS destinos;
 DROP TABLE IF EXISTS resolucion_solicitudes;
 DROP TABLE IF EXISTS solicitudes;
+DROP TABLE IF EXISTS autorechazos;
+
 
 
 -- Crear tabla solicitudes
@@ -40,7 +42,6 @@ CREATE TABLE usuarios (
     id_solicitud INT,
     usuario_solicitante BOOLEAN,
     oficio_especial BOOLEAN
-   -- FOREIGN KEY (id_solicitud) REFERENCES solicitudes(id_solicitud)
 );
 
 -- Crear tabla historial_usuarios
@@ -126,26 +127,12 @@ CREATE TABLE scoring (
 );
 
 
-
--- Crear tabla tipo_resolucion
---CREATE TABLE tipo_resolucion (
---  id_resolucion INT PRIMARY KEY,
--- tipo_resolucion VARCHAR(255)
---);
-
---CREATE TABLE destinos (
- ---   id_destinos INT PRIMARY KEY,
-   -- tipo_destino VARCHAR(255),
-   -- plazas_destino INT
-   -- );
-
---CREATE TABLE resolucion_solicitudes (
- --   id_solicitud INT PRIMARY KEY,
-  --  anyo_solicitud INT,
-  --  usuarios_sol VARCHAR(255),
-   -- renta_sol INT,
-   -- primera_opcion VARCHAR(255),
-   -- segunda_opcion VARCHAR(255),
---    tercera_opcion VARCHAR(255)
---);
+CREATE TABLE autorechazos (
+    dni VARCHAR(9) PRIMARY KEY,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    edad INT,
+    fecha_de_nacimiento DATE,
+    id_solicitud INT
+);
 

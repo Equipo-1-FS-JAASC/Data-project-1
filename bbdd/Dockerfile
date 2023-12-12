@@ -15,6 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
 # Copiar los scripts
 COPY fill_data_script2.py .
 COPY scoring.py .
+COPY autorechazo.py .
 
 # Establecer el comando predeterminado
-CMD ["bash", "-c", "python fill_data_script2.py && python scoring.py"]
+CMD ["bash", "-c", "python fill_data_script2.py && python autorechazo.py && python scoring.py "]
