@@ -2,12 +2,14 @@
 Este es el repositorio relativo al primer Data Project del Máster de Data Analytics de la promoción 2023-24. El grupo está compuesto por Stanislav, Adriana, Cristian, Alberto y Juan.
 
 # Índice
-1. [Objetivo del Data Project](#objetivo-del-data-project)
-2. [Flujograma del proceso](#flujograma-del-proceso)
-3. [Adaptación del proceso - Nuestra visión de la justicia](#adaptación-del-proceso---nuestra-visión-de-la-justicia)
-4. [Adaptación del proceso - Adaptaciones propuestas](#adaptación-del-proceso---adaptaciones-propuestas)
-5. [Estructura BBDD - Modelo Relacional](#estructura-bbdd---modelo-relacional)
-6. [Estructura BBDD - Listado y descripción de campos](#estructura-bbdd---listado-y-descripción-de-campos)
+- [Objeto del Repositiorio](#objeto-del-repositiorio)
+- [Índice](#índice)
+- [Objetivo del Data Project](#objetivo-del-data-project)
+- [Flujograma del proceso](#flujograma-del-proceso)
+- [Adaptación del proceso - Nuestra visión de la justicia](#adaptación-del-proceso---nuestra-visión-de-la-justicia)
+- [Adaptación del proceso - Adaptaciones propuestas](#adaptación-del-proceso---adaptaciones-propuestas)
+- [Estructura BBDD - Modelo Relacional](#estructura-bbdd---modelo-relacional)
+- [Estructura BBDD - Listado y descripción de campos](#estructura-bbdd---listado-y-descripción-de-campos)
 
 # Objetivo del Data Project
 Hacer una revisión del proceso actual de asignación de plazas del Imserso y ofrecer una versión que sea más justa en base a nuestro propio criterio.
