@@ -17,7 +17,7 @@ En primer lugar, llevamos a cabo la creación de una base de datos utilizando **
 En segundo lugar, creamos las tablas en la base de datos, el archivo que contiene estas tablas es **init.sql**, y creamos el script **fill_data_script.py** donde usamos las bibliotecas Faker y Random para rellenar la tabla. Faker una biblioteca de Python que se utiliza para generar datos ficticios de manera rápida y sencilla para rellenar la tabla y Random proporciona funciones para trabajar con números aleatorios.
 
 
-En tercer lugar, realizamos un pequeño análisis estadístico con ***notebooks*** para saber si nuestro algoritmo era justo, ver cantidad de personas que participaban, edad media, lugares donde la gente quería viajar, normalizamos las variables. El archivo donde se encuentra toda esta información es **scoring_jupyter.ipynb**. Al final de este archivo vemos que hay un comando que exporta **scoring.py** y es lo que realmente nos sirve para insertar los datos dentro de la tabla scoring.
+En tercer lugar, realizamos un pequeño análisis estadístico con ***notebooks*** para saber si nuestro algoritmo era justo, ver cantidad de personas que participaban, edad media, lugares donde la gente quería viajar, normalizamos las variables. El archivo donde se encuentra toda esta información es **scoring_jupyter.ipynb**. Al final de este archivo vemos que hay un comando que exporta **scoring.py** y es lo que usamos para insertar los datos dentro de la tabla scoring.
 
 Por ultimo, realizamos una visualización de datos con **Tableau**.
 
