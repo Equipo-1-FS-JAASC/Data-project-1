@@ -37,7 +37,7 @@ Por ultimo, realizamos una visualización de datos con **Tableau**.
 
 
 <p align="center">
-    <img src="imagenes/bbdd2.png" alt="Texto alternativo" width="400"/>
+    <img src="imagenes/acceso.png" alt="Texto alternativo" width="400"/>
 </p>
 
 
@@ -45,3 +45,4 @@ Por ultimo, realizamos una visualización de datos con **Tableau**.
 
 
 
+s
