@@ -45,4 +45,3 @@ Por ultimo, realizamos una visualización de datos con **Tableau**.
 
 
 
-s
