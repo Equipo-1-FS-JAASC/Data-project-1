@@ -34,9 +34,7 @@ Nuestra visión entiende la realidad de cada individuo como una realidad con mú
 ![Imagen_adaptaciones_propuestas](https://github.com/Equipo-1-FS-JAASC/Data-project-1/assets/145840791/f38dc2d6-81ed-407d-b8e8-00e199bc67fe)
 
 # Estructura BBDD - Modelo Relacional
-En base a las nuevas adaptaciones del proceso, hemos diseñado una estructura de BBDD para que se ajuste a este nuevo proceso.
-
-El detalle del proceso se encuentra en el siguiente pdf adjunto: [Imserso Process 1.2.pdf](https://github.com/Equipo-1-FS-JAASC/Data-project-1/files/13512478/Imserso.Process.1.2.pdf)
+![BBDD3](https://github.com/Equipo-1-FS-JAASC/Data-project-1/assets/145840791/b78420f8-2374-43a3-8071-f0e0539d02f1)
 
 # Estructura BBDD - Listado y descripción de campos
 El detalle de cada tabla y campo se encuentra en el siguiente documento : [tabla campos  & origen datos.xlsx](https://github.com/Equipo-1-FS-JAASC/Data-project-1/files/13660962/tabla.campos.origen.datos.xlsx)
