@@ -41,7 +41,7 @@ Por ultimo, realizamos una visualización de datos con **Tableau**.
 </p>
 
 
-4. En la base de datos podemos observar las tablas y el modelo relacional.
+5. En la base de datos podemos observar las tablas y el modelo relacional.
 
 
 
