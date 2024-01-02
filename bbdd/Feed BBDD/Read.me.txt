@@ -1,0 +1,1 @@
+El sript tablas.py parte el fichero "USUARIOS_RAW" según las necesidades de la BBDD.
